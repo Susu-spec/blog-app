@@ -1,7 +1,19 @@
+import { Box, Flex, Heading } from "@chakra-ui/react";
+
 export default function HomePage() {
     return (
-        <>
-            Posts
-        </>
+        <Box>
+            <Heading as="h1" fontWeight={500}>
+                Home
+            </Heading>
+            <Flex
+                align="center"
+                justify="space-between"
+                paddingTop={6}
+                paddingBottom={12}
+            >
+                Searchbox
+            </Flex>
+        </Box>
     )
 }
