@@ -3,7 +3,7 @@ import { Box, Flex, Heading } from "@chakra-ui/react";
 export default function HomePage() {
     return (
         <Box>
-            <Heading as="h1" fontWeight={500}>
+            <Heading as="h1" size="4xl">
                 Home
             </Heading>
             <Flex
