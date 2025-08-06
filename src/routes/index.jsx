@@ -10,7 +10,7 @@ export const routes = createBrowserRouter([
         element: <Layout />,
         children: [
             {
-                index: "posts",
+                index: true,
                 element: <HomePage />
             },
             {
