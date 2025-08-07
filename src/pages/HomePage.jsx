@@ -1,3 +1,4 @@
+import SearchModal from "@/components/shared/SearchModal";
 import { Box, Flex, Heading } from "@chakra-ui/react";
 
 export default function HomePage() {
@@ -12,7 +13,7 @@ export default function HomePage() {
                 paddingTop={6}
                 paddingBottom={12}
             >
-                Searchbox
+                <SearchModal />
             </Flex>
         </Box>
     )

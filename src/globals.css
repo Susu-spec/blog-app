@@ -20,8 +20,11 @@
   --font-inter-variable: "inter-variable", sans-serif;
 
   --color-bg-primary: "#08090A";
+  --color-bg-secondary: "#141516";
   --color-text-primary: "#f7f8f8";
-  --color-text-nav: "#8a8f98";
+  --color-border-primary: "#23252a";
+  --color-text-tertiary: "#8a8f98";
+
 }
 
 body {

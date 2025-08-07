@@ -43,7 +43,7 @@ const Navbar = () => {
             variant="link"
             height="2rem"
             padding={"0 .75rem"}
-            className={isActive('/') ? 'text-primary' : 'text-nav'}
+            className={isActive('/') ? 'text-primary' : 'text-tertiary'}
             fontWeight={500}
             onClick={() => navigate('/')}
             _hover={{ 
@@ -58,7 +58,7 @@ const Navbar = () => {
             height="2rem"
             padding={"0 .75rem"}
             fontWeight={500}
-            className={isActive('/posts') ? 'text-text-primary' : 'text-text-nav'}
+            className={isActive('/posts') ? 'text-text-primary' : 'text-text-text-tertiary'}
             onClick={() => navigate('/posts')}
             _hover={{ 
               backgroundColor: "hsla(0, 0%, 100%, .08)", 
