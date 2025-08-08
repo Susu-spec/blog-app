@@ -29,7 +29,15 @@ export default function SearchModal() {
                     px={4}
                 >
                     <Search2Icon boxSize={4} />
-                    <span style={{ flex: 1, textAlign: "start", fontSize: ".875rem" }}>Search...</span>
+                    <span 
+                        style={{ 
+                            flex: 1, 
+                            textAlign: "start", 
+                            fontSize: ".875rem" 
+                        }}
+                    >
+                        Search...
+                    </span>
                     <kbd>⌘K</kbd>
                 </Button>
             </Dialog.Trigger>

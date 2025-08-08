@@ -1,8 +1,17 @@
-import { LinkBox } from "@chakra-ui/react";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { Box, Flex, Heading, Image, LinkBox, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router";
 
-export default function PostCard() {
+export default function PostCard({ 
+    title, 
+    subtitle, 
+    img, 
+    date, 
+    author 
+}) {
+
     const navigate = useNavigate();
+
     return (
         <LinkBox
             as="article"
@@ -10,8 +19,72 @@ export default function PostCard() {
             borderWidth={1}
             borderRadius="sm"
             shadow="md"
-            _hover={{ shadow: 'lg', cursor: "pointer"}}
-            onClick={() => navigate(`/posts/${post.id}`)}>
+            _hover={{ 
+                shadow: 'lg', 
+                cursor: "pointer",
+                ".hover-icon": { opacity: 1, transform: "translateX(2px)" },
+            }}
+            onClick={() => navigate(`/posts/${post.slug}`)}
+            gap={5}
+            flexDirection="col"
+        >
+            <Box
+                overflow="hidden"
+                maxheight={252}
+                borderRadius="sm"
+                aspectRatio="auto"
+            >
+                <Image
+                    borderRadius="sm"
+                    src={img}
+                    width="100%"
+                />
+            </Box>
+            <Flex
+                flexDirection="col"
+                gap={2}
+                align="center"
+            >
+                <Flex
+                    justify="space-between"
+                    width="100%">
+                        <Text 
+                            as="span"
+                            color="#8a8f98"
+                            fontSize=".8125rem"
+                            lineHeight={1.5}
+                            letterSpacing="-.01em"
+                            width="100%"
+                        >
+                            {author}
+                            <Text as="span" display="inline-block" marginInline={1}>
+                                ·
+                            </Text>
+                            {date}
+                        </Text>
+                        <Icon
+                            as={ArrowForwardIcon}
+                            className="hover-icon"
+                            opacity={0}
+                            transition="all 0.2s ease"
+                            boxSize={4}
+                        />
+                    </Flex>
+                <Heading as="h3"
+                    lineHeight={1.33}
+                    letterSpacing="-0.012em"
+                    fontWeight={500}
+                >
+                    {title}
+                </Heading>
+                <Text
+                    fontSize=".875rem"
+                    color="#8a8f98"
+                    overflowWrap="anywhere"
+                >
+                    {subtitle}
+                </Text>
+            </Flex>
         </LinkBox>
     )
 }
