@@ -21,8 +21,10 @@
 
   --color-bg-primary: "#08090A";
   --color-bg-secondary: "#141516";
+  --color-bg-tertiary: "#0a0a0a";
   --color-text-primary: "#f7f8f8";
   --color-border-primary: "#23252a";
+  --color-border-secondary: "#ffffff80";
   --color-text-tertiary: "#8a8f98";
 
 }
@@ -34,6 +36,12 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-inter-variable);
+}
+
+@layer components {
+  .nav {
+    background: linear-gradient(180deg,var(--color-bg-primary) 0,transparent 100%);
+  }
 }
 
 @media (prefers-color-scheme: light) {

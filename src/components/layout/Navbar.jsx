@@ -15,9 +15,9 @@ const Navbar = () => {
       boxShadow="md"
       position="sticky"
       top={0}
-      borderBottom={"1px solid"}
-      width={"100%"}
-      className='border-b-bg-primary'
+      borderBottom=".5px solid hsl(0, 0%, 100%, .05)"
+      width="100%"
+      backgroundColor="#0a0a0a"
     >
       <Flex
         maxWidth={1024}
@@ -43,12 +43,17 @@ const Navbar = () => {
             variant="link"
             height="2rem"
             padding={"0 .75rem"}
-            className={isActive('/') ? 'text-primary' : 'text-tertiary'}
-            fontWeight={500}
+            color={isActive('/') ? "#f7f8f8" : "#8a8f98"}
+            borderRadius=".5rem"
             onClick={() => navigate('/')}
+            backgroundColor={isActive('/') ? "hsla(0, 0%, 100%, .08)" : "transparent"}
             _hover={{ 
+              color: "#f7f8f8",
               backgroundColor: "hsla(0, 0%, 100%, .08)", 
-              borderRadius: ".5rem"
+            }}
+            _active={{
+              color: "#f7f8f8",
+              backgroundColor: "hsla(0, 0%, 100%, .08)", 
             }}
           >
             Home
@@ -56,13 +61,19 @@ const Navbar = () => {
           <Button
             variant="link"
             height="2rem"
-            padding={"0 .75rem"}
+            padding="0 .75rem"
+            borderRadius=".5rem"
             fontWeight={500}
-            className={isActive('/posts') ? 'text-text-primary' : 'text-text-text-tertiary'}
+            color={isActive('/posts') ? "#f7f8f8" : "#8a8f98"}
+            backgroundColor={isActive('/posts') ? "hsla(0, 0%, 100%, .08)" : "transparent"}
             onClick={() => navigate('/posts')}
             _hover={{ 
+              color: "#f7f8f8",
               backgroundColor: "hsla(0, 0%, 100%, .08)", 
-              borderRadius: ".5rem"
+            }}
+             _active={{
+              color: "#f7f8f8",
+              backgroundColor: "hsla(0, 0%, 100%, .08)", 
             }}
           >
             Posts

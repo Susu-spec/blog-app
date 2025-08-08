@@ -5,7 +5,7 @@ export default function HomePage() {
     return (
         <Box>
             <Heading as="h1" size="4xl">
-                Home
+                Now
             </Heading>
             <Flex
                 align="center"
