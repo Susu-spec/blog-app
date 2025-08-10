@@ -11,11 +11,14 @@ const Navbar = () => {
   return (
     <Box
       as="nav"
-      p={4}
+      p={{ 
+        base: "6", 
+        lg: "4"
+      }}
       boxShadow="md"
       position="sticky"
       top={0}
-      borderBottom=".5px solid hsl(0, 0%, 100%, .05)"
+      zIndex={999}
       width="100%"
       backgroundColor="#0a0a0a"
     >

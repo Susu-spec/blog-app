@@ -8,7 +8,12 @@ export default function Layout() {
         <Flex direction="column" minHeight="100vh">
             <Navbar />
             <Box flex="1" as="main">
-                <Container maxW="1024px" py="3.75rem" px={0} marginX="auto">
+                <Container 
+                    maxW="1024px" 
+                    py={{ base: "3rem", lg: "5rem"}} 
+                    px={6} 
+                    marginX="auto"
+                >
                     <Outlet />
                 </Container>
             </Box>
