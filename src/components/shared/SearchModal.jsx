@@ -1,8 +1,8 @@
 import { posts } from "@/data/posts";
-import { ArrowForwardIcon, Search2Icon } from "@chakra-ui/icons";
 import { Box, Button, Dialog, Flex, Icon, Input, Kbd, Portal, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { HiArrowRight, HiMagnifyingGlass } from "react-icons/hi2";
 
 export default function SearchModal() {
     const [search, setSearch] = useState("");
@@ -29,7 +29,7 @@ export default function SearchModal() {
                     height="40px"
                     px={4}
                 >
-                    <Search2Icon boxSize={4} />
+                    <HiMagnifyingGlass size={4} />
                     <span 
                         style={{ 
                             flex: 1, 
@@ -96,7 +96,7 @@ export default function SearchModal() {
                                                         gap={3}
                                                         _hover={{ backgroundColor: "hsla(0,0%,4%,.8)" }}
                                                     >
-                                                    <ArrowForwardIcon
+                                                    <HiArrowRight
                                                             width="14px" 
                                                             height="14px" 
                                                             className="text-text-tertiary"
