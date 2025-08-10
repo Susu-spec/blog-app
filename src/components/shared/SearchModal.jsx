@@ -1,3 +1,4 @@
+import { posts } from "@/data/posts";
 import { ArrowForwardIcon, ArrowRightIcon, Search2Icon } from "@chakra-ui/icons";
 import { Box, Button, Dialog, Flex, Icon, Input, Kbd, Portal, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
@@ -5,10 +6,10 @@ import { useState } from "react";
 
 export default function SearchModal() {
     const [search, setSearch] = useState("");
-    const [items] = useState(["Apple", "Banana", "Cherry", "Date", "Eggfruit", "Strawberry", "Eggplant"]);
+    const [items] = useState(posts);
 
     const filtered = items.filter((item) =>
-        item.toLowerCase().includes(search.toLowerCase())
+        item.title.toLowerCase().includes(search.toLowerCase())
     );
 
     const MotionBox = motion.div;
@@ -105,7 +106,7 @@ export default function SearchModal() {
                                                             _hover={{ color: "#f7f8f8" }} 
                                                             className="text-text-tertiary"
                                                         >
-                                                            {item}
+                                                            {item.title}
                                                         </Text>
                                                     </Flex>
                                                 ))
