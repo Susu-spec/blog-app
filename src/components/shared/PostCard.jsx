@@ -1,5 +1,5 @@
-import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Box, Flex, Heading, Icon, Image, LinkBox, Text } from "@chakra-ui/react";
+import { HiArrowRight } from "react-icons/hi2";
 import { useNavigate } from "react-router";
 
 export default function PostCard({ 
@@ -71,7 +71,7 @@ export default function PostCard({
                                 {date}
                             </Text>
                             <Icon
-                                as={ArrowForwardIcon}
+                                as={HiArrowRight}
                                 className="hover-icon"
                                 opacity={0}
                                 transition="all 0.2s ease"

@@ -1,5 +1,5 @@
 import { posts } from "@/data/posts";
-import { ArrowForwardIcon, ArrowRightIcon, Search2Icon } from "@chakra-ui/icons";
+import { ArrowForwardIcon, Search2Icon } from "@chakra-ui/icons";
 import { Box, Button, Dialog, Flex, Icon, Input, Kbd, Portal, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
