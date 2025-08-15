@@ -12,6 +12,7 @@ export default function SearchModal() {
         item.title.toLowerCase().includes(search.toLowerCase())
     );
 
+    // implement debounced search
     const MotionBox = motion.div;
 
     return (
@@ -21,10 +22,11 @@ export default function SearchModal() {
                     variant="outline"
                     size="sm"
                     minWidth="300px"
-                    border="1px solid #23252a"
+                    border="1px solid"
+                    borderColor="buttonBorderColor"
                     borderRadius={100}
-                    backgroundColor="#141516"
-                    color="#8a8f98"
+                    backgroundColor="buttonBg"
+                    color="buttonText"
                     fontSize="14px"
                     height="40px"
                     px={4}
@@ -57,7 +59,6 @@ export default function SearchModal() {
                                     padding={".75rem 1.125rem"} 
                                     height={"48px"}
                                     placeholder="Search now..."
-                                    className="text-text-primary text-lg"
                                     border="none"
                                     borderBottom={"1px solid hsl(0, 0%, 100%, .05)"}
                                     onChange={(e) => setSearch(e.target.value)}
@@ -80,7 +81,7 @@ export default function SearchModal() {
                                             <Text 
                                                 paddingBlock={5}
                                                 textAlign="center"
-                                                className="text-text-primary"
+                                                color="buttonText"
                                             >
                                                 No results found
                                             </Text>
@@ -91,20 +92,17 @@ export default function SearchModal() {
                                                         key={index} 
                                                         padding={".75rem 1.125rem"} 
                                                         cursor="pointer" 
-                                                        className="text-sm"
                                                         alignItems="center"
                                                         gap={3}
-                                                        _hover={{ backgroundColor: "hsla(0,0%,4%,.8)" }}
+                                                        _hover={{ backgroundColor: "linkHoverBg" }}
                                                     >
-                                                    <HiArrowRight
+                                                        <HiArrowRight
                                                             width="14px" 
                                                             height="14px" 
-                                                            className="text-text-tertiary"
-                                                            _hover={{ color: "#f7f8f8" }}
+                                                            _hover={{ color: "bodyText" }}
                                                         />
                                                         <Text 
-                                                            _hover={{ color: "#f7f8f8" }} 
-                                                            className="text-text-tertiary"
+                                                            _hover={{ color: "bodyText" }} 
                                                         >
                                                             {item.title}
                                                         </Text>

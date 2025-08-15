@@ -28,7 +28,10 @@ export default function PostCard({
             <Flex
                 gap={5}
                 flexDirection="column"
-                maxWidth={450}
+                maxWidth={{
+                    base: "100%",
+                    lg: 450
+                }}
             >
                 <Box
                     overflow="hidden"
@@ -46,7 +49,10 @@ export default function PostCard({
                 </Box>
                 <Flex
                     flexDirection="column"
-                    gap={2}
+                    gap={{
+                        base: 1,
+                        lg: 2
+                    }}
                     align="start"
                 >
                     <Flex
