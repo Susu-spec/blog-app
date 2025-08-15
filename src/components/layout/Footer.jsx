@@ -1,25 +1,38 @@
 import { Box, Flex } from "@chakra-ui/react";
 import ToggleThemeButton from "../shared/ToggleThemeButton";
+import BackToTopButton from "../shared/BackToTopButton";
 
 export default function Footer() {
+    const scrollToTop = () => {
+         window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+
     return (
-        <Box as="footer"
-                p={{ 
+        <Box 
+            as="footer"
+            p={{ 
                 base: "6", 
                 lg: "4"
             }}
-            boxShadow="md"
+            boxShadow="lg"
+            position="sticky"
+            bottom={0}
+            zIndex={999}
             width="100%"
-            backgroundColor="#0a0a0a"
+            backgroundColor="navBg"
         >
            <Flex
                 maxWidth={1024}
                 justify="space-between"
                 align="center"
-                className='w-full'
+                width="100%"
                 marginX="auto"
             >
                 <ToggleThemeButton />
+                <BackToTopButton />
             </Flex>  
 
         </Box>
