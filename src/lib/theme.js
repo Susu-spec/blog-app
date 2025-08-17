@@ -7,6 +7,9 @@ const config = defineConfig({
         bodyText: {
           value: { base: "#08090A", _dark: "#f7f8f8" },
         },
+        linkText: {
+          value: { base: "#6F6E77", _dark: "#8a8f98" }
+        },
         bodyBg: {
           value: { base: "#f7f8f8", _dark: "#08090A" },
         },

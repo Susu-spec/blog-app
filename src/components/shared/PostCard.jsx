@@ -3,6 +3,7 @@ import { HiArrowRight } from "react-icons/hi2";
 import { useNavigate } from "react-router";
 
 export default function PostCard({ 
+    id,
     title, 
     subtitle, 
     img, 
@@ -22,7 +23,8 @@ export default function PostCard({
                     transform: "translateX(2px)" 
                 },
             }}
-            onClick={() => navigate(`/posts/${post.slug}`)}
+            // replace with id later
+            onClick={() => navigate(`/posts/5`)}
             
         >
             <Flex

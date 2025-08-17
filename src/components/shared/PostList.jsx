@@ -17,6 +17,7 @@ export default function PostList({ posts }) {
                     <React.Fragment key={id}>
                         <GridItem>
                             <PostCard
+                                id={id}
                                 title={title}
                                 subtitle={subtitle}
                                 img={img}
@@ -40,6 +41,7 @@ export default function PostList({ posts }) {
 
                         <GridItem>
                             <PostCard
+                                id={posts[index + 1].id}
                                 key={posts[index + 1].id}
                                 title={posts[index + 1].title}
                                 subtitle={posts[index + 1].subtitle}
