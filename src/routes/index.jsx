@@ -1,6 +1,8 @@
 import Layout from "@/components/layout/Layout";
+import CreatePost from "@/pages/CreatePost";
 import HomePage from "@/pages/HomePage";
 import PostDetails from "@/pages/PostDetail";
+import PostEditor from "@/pages/PostEditor";
 import { createBrowserRouter } from "react-router";
 
 export const routes = createBrowserRouter([
@@ -15,6 +17,14 @@ export const routes = createBrowserRouter([
             {
                 path: "posts/:slug",
                 element: <PostDetails />
+            },
+            {
+                path: "posts/:slug/edit",
+                element: <PostEditor />
+            },
+            {
+                path: "posts/create",
+                element: <CreatePost />
             }
         ]
      }

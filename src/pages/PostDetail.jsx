@@ -1,10 +1,33 @@
+
+// import { toaster, Toaster } from "@/components/ui/toaster";
+import { toaster } from "@/components/ui/toaster";
 import { postDetail } from "@/data/post-detail";
 import { Box, Container, Flex, Heading, Image, Text } from "@chakra-ui/react";
-import { useParams } from "react-router"
+import { useParams } from "react-router";
 
 export default function PostDetail() {
     const { slug } = useParams();
     
+    
+    
+   const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(
+                `https://www.susu-blog.vercel.app/posts/${slug}`
+            )
+            toaster.create({
+                description: "Share link copied to your clipboard",
+                type: "info",
+            })
+            } catch (err) {
+            console.error("Failed to copy text:", err)
+            toaster.create({
+                title: "Try again",
+                description: "Failed to copy link",
+                type: "error",
+            })
+        }
+    }
 
     return (
         <Box>
@@ -64,7 +87,7 @@ export default function PostDetail() {
                                 <Text as="time">{date}</Text>
                                 <Text as="span" marginInline=".625rem">·</Text>
                                 {/* Add copy text, trigger toast */}
-                                <Text cursor="pointer">Copy Text</Text>
+                                <button onClick={() => handleCopy()} className="cursor-pointer">Copy Text</button>
                             </Flex>
                             <Box 
                                 marginTop={{ base: "2.75rem", lg: "4.75rem" }}
