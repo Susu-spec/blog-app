@@ -23,7 +23,7 @@ export const routes = createBrowserRouter([
                 element: <PostEditor />
             },
             {
-                path: "posts/create",
+                path: "post/create",
                 element: <CreatePost />
             }
         ]

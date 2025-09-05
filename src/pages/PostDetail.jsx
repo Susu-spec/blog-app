@@ -1,14 +1,15 @@
 
-// import { toaster, Toaster } from "@/components/ui/toaster";
 import { toaster } from "@/components/ui/toaster";
 import { postDetail } from "@/data/post-detail";
 import { Box, Container, Flex, Heading, Image, Text } from "@chakra-ui/react";
-import { useParams } from "react-router";
+import { HiPencil } from "react-icons/hi2";
+import { LuPencil } from "react-icons/lu";
+import { useNavigate, useParams } from "react-router";
 
 export default function PostDetail() {
     const { slug } = useParams();
     
-    
+    const navigate = useNavigate();
     
    const handleCopy = async () => {
         try {
@@ -87,7 +88,20 @@ export default function PostDetail() {
                                 <Text as="time">{date}</Text>
                                 <Text as="span" marginInline=".625rem">·</Text>
                                 {/* Add copy text, trigger toast */}
-                                <button onClick={() => handleCopy()} className="cursor-pointer">Copy Text</button>
+                                <div className="flex gap-2.5 items-center">
+                                    <button 
+                                        onClick={() => handleCopy()} 
+                                        className="cursor-pointer">
+                                            Copy Text
+                                    </button>
+                                    <button 
+                                        onClick={() => navigate("/post/create")} 
+                                        className="cursor-pointer"
+                                    >
+                                        <LuPencil size={16} color="buttonText" />
+                                    </button>
+                                </div>
+                                
                             </Flex>
                             <Box 
                                 marginTop={{ base: "2.75rem", lg: "4.75rem" }}
