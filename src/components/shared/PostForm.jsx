@@ -8,17 +8,19 @@ import { HiXCircle } from "react-icons/hi2";
 import { useNavigate } from "react-router";
 import { LuX } from "react-icons/lu";
 
-export default function PostForm() {
+export default function PostForm({ post }) {
     const navigate = useNavigate();
     const initialValues = {
-        content: "",
+        content: post?.content || "",
     };
+    const isEdit = Boolean(post);
 
     const handleSubmit = async (values, actions) => {
         setTimeout(() => {
             alert(JSON.stringify(values, null, 2));
             actions.setSubmitting(false);
         }, 1000);
+        navigate("/posts");
     };
 
   return (
@@ -36,7 +38,7 @@ export default function PostForm() {
             <div className="flex flex-col gap-3">
                 <div className="flex justify-between items-center">
                     <h1 className="!text-4xl !font-semibold">
-                        Create a New Post
+                        {isEdit ? "Create a New Post" : "Update Post"}
                     </h1>
                     <button className="pointer" onClick={() => navigate(-1)}>
                         <HiXCircle size={48} color="bodyText" />
@@ -49,8 +51,16 @@ export default function PostForm() {
                 </div>
             </div>
             {/* Submit */}
-            <Button rounded={"lg"} minW="8rem" className="self-end" colorScheme="teal" isLoading={isSubmitting} disabled={!!touched.content} type="submit">
-              Upload
+            <Button 
+              rounded={"lg"} 
+              minW="8rem" 
+              className="self-end" 
+              colorScheme="teal" 
+              isLoading={isSubmitting} 
+              disabled={!!touched.content} 
+              type="submit"
+            >
+              {isEdit ? "Create" : "Update"}
             </Button>
           </Form>
         );

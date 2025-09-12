@@ -95,7 +95,7 @@ export default function PostDetail() {
                                             Copy Text
                                     </button>
                                     <button 
-                                        onClick={() => navigate("/post/create")} 
+                                        onClick={() => navigate(`/post/${id}/edit`)} 
                                         className="cursor-pointer"
                                     >
                                         <LuPencil size={16} color="buttonText" />
