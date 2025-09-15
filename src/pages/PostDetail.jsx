@@ -98,7 +98,7 @@ export default function PostDetail() {
                                         onClick={() => navigate(`/post/${id}/edit`)} 
                                         className="cursor-pointer"
                                     >
-                                        <LuPencil size={16} color="buttonText" />
+                                        <LuPencil size={10} color="buttonText" />
                                     </button>
                                 </div>
                                 
@@ -110,7 +110,10 @@ export default function PostDetail() {
                                 maxWidth="prose"
                                 color="bodyText"
                             >
-                                {content}
+                                {/* {post?.content.map((block, index) => (
+                                    <div key={index}>{renderBlock(block)}</div>
+                                ))} */}
+                                {post.content}
                             </Box>
                         </Container>
                     </Flex>
@@ -118,4 +121,31 @@ export default function PostDetail() {
             })}
         </Box>
     )
+}
+
+const renderBlock = (block) => {
+    switch (block.type) {
+        case "paragraph": 
+            return <p>{block.data.text}</p>
+        case "header":
+            return <h3>{block.data.header}</h3>
+        case "image":
+            return (
+                 <Box
+                    marginY={{ base: 6, lg: 12 }}
+                    marginX="auto"
+                >
+                    <Image 
+                        src={block.data.src}
+                        borderRadius="sm"
+                        width="100%"
+                        height={440}
+                        alt={block.data.alt || "Image"}
+                        objectFit={{ base: "fill", lg: "cover" }}
+                    />
+                </Box>
+            )
+        default:
+            null;
+    }
 }

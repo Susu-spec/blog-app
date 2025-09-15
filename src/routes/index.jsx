@@ -15,11 +15,11 @@ export const routes = createBrowserRouter([
                 element: <HomePage />
             },
             {
-                path: "posts/:slug",
+                path: "posts/:id",
                 element: <PostDetails />
             },
             {
-                path: "posts/:slug/edit",
+                path: "posts/:id/edit",
                 element: <PostEditor />
             },
             {

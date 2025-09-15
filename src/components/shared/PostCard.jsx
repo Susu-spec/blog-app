@@ -24,7 +24,7 @@ export default function PostCard({
                 },
             }}
             // replace with id later
-            onClick={() => navigate(`/posts/5`)}
+            onClick={() => navigate(`/posts/${id}`)}
             
         >
             <Flex
@@ -68,7 +68,7 @@ export default function PostCard({
                                 letterSpacing="-.01em"
                                 width="100%"
                             >
-                                {author}
+                                {author?.name}
                                 <Text 
                                     as="span" 
                                     display="inline-block" 

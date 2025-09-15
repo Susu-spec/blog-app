@@ -1,12 +1,11 @@
 import PostForm from "@/components/shared/PostForm";
+import { postDetail } from "@/data/post-detail";
 import { Box } from "@chakra-ui/react";
 
 export default function PostEditor() {
-    // const { id } = usePosts();
-
     return (
         <Box>
-            <PostForm />
+            <PostForm post={postDetail}/>
         </Box>
     )
 }
