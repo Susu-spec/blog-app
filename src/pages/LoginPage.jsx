@@ -99,7 +99,7 @@ export default function LoginPage() {
                                             {({ field }) => (
                                             <FormControl isInvalid={!!errors.password && touched.password} className="flex flex-col gap-2 w-full">
                                                 <FormLabel htmlFor="password" className="!font-montserrat">Password</FormLabel>
-                                                <PasswordField {...field} placeholder={password}/>
+                                                <PasswordField {...field} placeholder="password" />
                                                 <FormErrorMessage className="text-red-300 !text-xs !font-montserrat">{errors.password}</FormErrorMessage>
                                             </FormControl>
                                             )}
