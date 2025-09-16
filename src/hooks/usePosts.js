@@ -11,7 +11,7 @@ export function usePosts() {
         .from("posts")
         .select(`
           *,
-          author:author_id(name, avatar_url)
+          author:author_id(name)
         `)
         .order("created_at", { ascending: false });
 

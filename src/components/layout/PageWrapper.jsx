@@ -11,7 +11,7 @@ export default function PageWrapper({ children }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -15 }}
       transition={{ duration: 0.8, ease: easeOut }}
-      className="w-full h-full"
+      className="w-full min-h-[100dvh]"
     >
       {children}
     </motion.div>

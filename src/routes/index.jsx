@@ -5,13 +5,19 @@ import HomePage from "@/pages/HomePage";
 import LoginPage from "@/pages/LoginPage";
 import PostDetails from "@/pages/PostDetail";
 import PostEditor from "@/pages/PostEditor";
+import SignupPage from "@/pages/SignupPage";
 import { createBrowserRouter } from "react-router";
+import ProtectedRoute from "./ProtectedRoute";
 
 export const routes = createBrowserRouter([
     { path: "*", element: <div>404 Not Found.</div> },
     { 
         path: "/login", 
         element: <PageWrapper><LoginPage /></PageWrapper>
+    },
+    {
+        path: "/signup",
+        element: <PageWrapper><SignupPage /></PageWrapper>
     },
     {
         path: "/", 
@@ -23,15 +29,33 @@ export const routes = createBrowserRouter([
             },
             {
                 path: "posts/:id",
-                element: <PageWrapper><PostDetails /></PageWrapper>
+                element: (
+                    <ProtectedRoute>
+                        <PageWrapper>
+                            <PostDetails />
+                        </PageWrapper>
+                    </ProtectedRoute>
+                )
             },
             {
                 path: "posts/:id/edit",
-                element: <PageWrapper><PostEditor /></PageWrapper>
+                element: (
+                    <ProtectedRoute>
+                        <PageWrapper>
+                            <PostEditor />
+                        </PageWrapper>
+                    </ProtectedRoute>
+                )
             },
             {
                 path: "post/create",
-                element: <PageWrapper><CreatePost /></PageWrapper>
+                element: (
+                    <ProtectedRoute>
+                        <PageWrapper>
+                            <CreatePost />
+                        </PageWrapper>
+                    </ProtectedRoute>
+                )
             }
         ]
      }
