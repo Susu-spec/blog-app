@@ -45,10 +45,10 @@ export default function LoginPage() {
         <div className="min-h-[100dvh] flex flex-col justify-center">
             <Box 
                 minW={{
-                    base: "60%",
-                    sm: "20rem",
+                    base: "90%",
+                    sm: "90%",
                     md: "25rem",
-                    lg: "30rem",
+                    lg: "30rem"
                 }} 
                 marginY="auto" 
                 marginX="auto" 
