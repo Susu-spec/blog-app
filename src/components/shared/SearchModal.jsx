@@ -1,4 +1,4 @@
-import { posts } from "@/data/posts";
+import { usePosts } from "@/hooks/usePosts";
 import { Box, Button, Dialog, Flex, Icon, Input, Kbd, Portal, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -6,6 +6,7 @@ import { HiArrowRight, HiMagnifyingGlass } from "react-icons/hi2";
 
 export default function SearchModal() {
     const [search, setSearch] = useState("");
+    const { posts } = usePosts();
     const [items] = useState(posts);
 
     const filtered = items.filter((item) =>
@@ -83,7 +84,7 @@ export default function SearchModal() {
                                                 textAlign="center"
                                                 color="buttonText"
                                             >
-                                                No results found
+                                                No results found.
                                             </Text>
                                         )
                                             : (
