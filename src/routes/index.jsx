@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import PageWrapper from "@/components/layout/PageWrapper";
 import CreatePost from "@/pages/CreatePost";
 import HomePage from "@/pages/HomePage";
 import PostDetails from "@/pages/PostDetail";
@@ -12,19 +13,19 @@ export const routes = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <HomePage />
+                element: <PageWrapper><HomePage /></PageWrapper>
             },
             {
                 path: "posts/:id",
-                element: <PostDetails />
+                element: <PageWrapper><PostDetails /></PageWrapper>
             },
             {
                 path: "posts/:id/edit",
-                element: <PostEditor />
+                element: <PageWrapper><PostEditor /></PageWrapper>
             },
             {
                 path: "post/create",
-                element: <CreatePost />
+                element: <PageWrapper><CreatePost /></PageWrapper>
             }
         ]
      }

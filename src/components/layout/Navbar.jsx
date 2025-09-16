@@ -62,6 +62,25 @@ const Navbar = () => {
           >
             Home
           </Button>
+           <Button
+            variant="link"
+            height="2rem"
+            padding={"0 .75rem"}
+            color={"buttonActiveText"}
+            borderRadius=".5rem"
+            onClick={() => navigate('/post/create')}
+            backgroundColor={"transparent"}
+            _hover={{ 
+              color: "buttonActiveText",
+              backgroundColor: "buttonBg", 
+            }}
+            _active={{
+              color: "buttonActiveText",
+              backgroundColor: "buttonBg", 
+            }}
+          >
+            Create
+          </Button>
           {/* <Button
             variant="link"
             height="2rem"
