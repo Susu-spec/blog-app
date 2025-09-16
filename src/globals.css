@@ -16,6 +16,7 @@
 
 @theme {
   --font-inter-variable: "inter-variable", sans-serif;
+  --font-montserrat: "Montserrat", sans-serif;
 
   --color-bg-primary: "#08090A";
   --color-bg-secondary: "#141516";
