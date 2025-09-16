@@ -3,6 +3,9 @@ import PostCard from "./PostCard";
 import React from "react";
 
 export default function PostList({ posts }) {
+    if (posts.length === 0) {
+        return <p className="italic">No posts available.</p>
+    }
     return (
         <Grid
             gapX={0}
@@ -10,7 +13,7 @@ export default function PostList({ posts }) {
             templateColumns={{ base: "1fr", lg: "1fr 80px 1fr"}}
         >
             {posts.map((post, index) => {
-                const { id, title, subtitle, img, date, author } = post;
+                const { id, title, subtitle, img, createdAt, author } = post;
 
                 if (index % 2 === 0 && posts[index + 1]) {
                 return (
@@ -21,7 +24,7 @@ export default function PostList({ posts }) {
                                 title={title}
                                 subtitle={subtitle}
                                 img={img}
-                                date={date}
+                                date={new Date(created_at).toLocaleDateString()}
                                 author={author}
                             />
                         </GridItem>
@@ -46,7 +49,7 @@ export default function PostList({ posts }) {
                                 title={posts[index + 1].title}
                                 subtitle={posts[index + 1].subtitle}
                                 img={posts[index + 1].img}
-                                date={posts[index + 1].date}
+                                date={new Date(posts[index + 1].created_at).toLocaleDateString()}
                                 author={posts[index + 1].author}
                             />
                         </GridItem>

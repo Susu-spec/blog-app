@@ -8,7 +8,7 @@ export function usePosts() {
   useEffect(() => {
     async function fetchPosts() {
       const { data, error } = await supabase
-        .from("Posts")
+        .from("posts")
         .select(`
           *,
           author:author_id(name, avatar_url)

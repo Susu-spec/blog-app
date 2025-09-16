@@ -1,5 +1,5 @@
 import { Formik, Form, Field } from "formik";
-import { Input, Button } from "@chakra-ui/react";
+import { Input, Button, Spinner } from "@chakra-ui/react";
 import {  useBlockNote } from "@blocknote/react";
 import "@blocknote/core/style.css";
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/form-control";
@@ -7,21 +7,70 @@ import { BlockNoteView } from "@blocknote/mantine";
 import { HiXCircle } from "react-icons/hi2";
 import { useNavigate } from "react-router";
 import { LuX } from "react-icons/lu";
+import { supabase } from "@/lib/supabase";
+import { toaster } from "../ui/toaster";
+import { useState } from "react";
 
 export default function PostForm({ post }) {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+
     const initialValues = {
         content: post?.content || "",
     };
     const isEdit = Boolean(post);
 
-    const handleSubmit = async (values, actions) => {
-        setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            actions.setSubmitting(false);
-        }, 1000);
-        navigate("/posts");
-    };
+  const handleSubmit = async (values, actions) => {
+    setLoading(true);
+    try {
+      let response;
+
+      if (values.id) {
+        response = await supabase
+          .from("posts")
+          .update({
+            title: values.title,
+            content: values.content,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", values.id)
+          .select();
+      } else {
+        response = await supabase
+          .from("posts")
+          .insert([
+            {
+              title: values.title,
+              content: values.content,
+              created_at: new Date().toISOString(),
+            },
+          ])
+          .select();
+      }
+
+      if (response.error) throw response.error;
+
+      console.log("Post saved:", response.data);
+      toaster.create({
+          title: isEdit ? "Post updated" : "Post created",
+          description: "Redirecting to posts...",
+          type: "info",
+      })
+
+      actions.setSubmitting(false);
+      navigate("/posts");
+    } catch (error) {
+      console.error("Error saving post:", error.message);
+      actions.setSubmitting(false);
+      toaster.create({
+          title: "Error",
+          description: error.message,
+          type: "error",
+      })
+    }
+    setLoading(false);
+  };
+
 
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
@@ -38,7 +87,7 @@ export default function PostForm({ post }) {
             <div className="flex flex-col gap-3">
                 <div className="flex justify-between items-center">
                     <h1 className="!text-4xl !font-semibold">
-                        {isEdit ? "Create a New Post" : "Update Post"}
+                        {isEdit ? "Update Post" : "Create a New Post"}
                     </h1>
                     <button className="pointer" onClick={() => navigate(-1)}>
                         <HiXCircle size={48} color="bodyText" />
@@ -56,11 +105,15 @@ export default function PostForm({ post }) {
               minW="8rem" 
               className="self-end" 
               colorScheme="teal" 
-              isLoading={isSubmitting} 
-              disabled={!!touched.content} 
+              isLoading={loading || isSubmitting} 
+              // disabled={!!touched.content} 
               type="submit"
+              display="flex"
+              gap={2}
+              alignItems={"center"}
             >
-              {isEdit ? "Create" : "Update"}
+              {loading && <Spinner size={"sm"} mr={2} />}
+              {isEdit ? "Update" : "Create"}
             </Button>
           </Form>
         );
