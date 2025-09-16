@@ -6,7 +6,7 @@ import { AnimatePresence } from "framer-motion"
 function App() {
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence>
       <RouterProvider router={routes} />
       <Toaster />
     </AnimatePresence>
