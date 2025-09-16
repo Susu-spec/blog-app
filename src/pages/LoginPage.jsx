@@ -5,6 +5,7 @@ import { Box, Button, Card, Input, Spinner } from "@chakra-ui/react";
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/form-control";
 import { Link, useNavigate } from "react-router";
 import { supabase } from "@/lib/supabase";
+import PasswordField from "@/components/shared/PasswordField";
 
 export default function LoginPage() {
     const navigate = useNavigate();
@@ -98,14 +99,7 @@ export default function LoginPage() {
                                             {({ field }) => (
                                             <FormControl isInvalid={!!errors.password && touched.password} className="flex flex-col gap-2 w-full">
                                                 <FormLabel htmlFor="password" className="!font-montserrat">Password</FormLabel>
-                                                <Input
-                                                    {...field}
-                                                    id="password"
-                                                    type="password"
-                                                    placeholder="Password"
-                                                    height="3rem"
-                                                    borderRadius="lg"
-                                                />
+                                                <PasswordField {...field} placeholder={password}/>
                                                 <FormErrorMessage className="text-red-300 !text-xs !font-montserrat">{errors.password}</FormErrorMessage>
                                             </FormControl>
                                             )}
