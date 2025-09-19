@@ -3,6 +3,14 @@ import { defineConfig, createSystem, defaultConfig } from "@chakra-ui/react"
 const config = defineConfig({
   theme: {
     semanticTokens: {
+      shadows: {
+        custom: {
+          value: {
+           base: "0px 4px 10px rgba(0,0,0,0.25)",
+            _dark: "0px 4px 10px rgba(255,255,255,0.25)",
+          }
+        }
+      },
       colors: {
         bodyText: {
           value: { base: "#08090A", _dark: "#f7f8f8" },
