@@ -41,6 +41,7 @@ export default function LoginPage() {
         actions.setSubmitting(false);
         setLoading(false);
     };
+
     return (
         <div className="min-h-[100dvh] flex flex-col justify-center">
             <Box 
@@ -99,7 +100,7 @@ export default function LoginPage() {
                                             {({ field }) => (
                                             <FormControl isInvalid={!!errors.password && touched.password} className="flex flex-col gap-2 w-full">
                                                 <FormLabel htmlFor="password" className="!font-montserrat">Password</FormLabel>
-                                                <PasswordField {...field} placeholder="password" />
+                                                <PasswordField {...field} placeholder="Password" />
                                                 <FormErrorMessage className="text-red-300 !text-xs !font-montserrat">{errors.password}</FormErrorMessage>
                                             </FormControl>
                                             )}

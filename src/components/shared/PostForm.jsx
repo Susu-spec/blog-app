@@ -2,7 +2,6 @@ import { Formik, Form, Field } from "formik";
 import { Input, Button, Spinner } from "@chakra-ui/react";
 import {  useBlockNote } from "@blocknote/react";
 import "@blocknote/core/style.css";
-import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/form-control";
 import { BlockNoteView } from "@blocknote/mantine";
 import { HiXCircle } from "react-icons/hi2";
 import { useNavigate } from "react-router";
@@ -49,8 +48,7 @@ export default function PostForm({ post }) {
       }
 
       if (response.error) throw response.error;
-
-      console.log("Post saved:", response.data);
+      
       toaster.create({
           title: isEdit ? "Post updated" : "Post created",
           description: "Redirecting to posts...",
