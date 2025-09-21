@@ -1,5 +1,5 @@
 import { Formik, Form, Field } from "formik";
-import { Input, Button, Spinner, Box, Flex, Grid, GridItem, VStack } from "@chakra-ui/react";
+import { Input, Button, Spinner, Box, Flex, Grid, GridItem, VStack, Image, Progress } from "@chakra-ui/react";
 import {  useBlockNote } from "@blocknote/react";
 import "@blocknote/core/style.css";
 import { BlockNoteView } from "@blocknote/mantine";
@@ -9,28 +9,42 @@ import { LuX } from "react-icons/lu";
 import { supabase } from "@/lib/supabase";
 import { toaster } from "../ui/toaster";
 import React, { useState } from "react";
+import { useUser } from "@supabase/auth-helpers-react";
 
 export default function PostForm({ post }) {
-    const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const [uploadedFiles, setUploadedFiles] = useState([])
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState([])
+  const [file, setFile] = useState(null);
+  const [fileUploading, setFileUploading] = useState(false);
 
-    const initialValues = {
-        content: post?.content || "",
-    };
-    const isEdit = Boolean(post);
+  const initialValues = {
+    content: post?.content || "",
+  };
 
-    const handleFileChange = (e) => {
-      if (e.target.files) {
-        setUploadedFiles([...uploadedFiles, ...Array.from(e.target.files)]);
-      }
-    }
+  const isEdit = Boolean(post);
+
+  const handleFileChange = (e) => {
+    setFileUploading(true);
+    setTimeout(() => {
+      setFileUploading(false);
+      setFile(e.target.files[0])
+    }, 2000);
+  }
+
   const handleSubmit = async (values, actions) => {
     setLoading(true);
 
     try {
-      const user = supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
+      const { data, error } = await supabase.auth.getUser();
+      if (error) throw error;
+
+      const user = data?.user;
+
+      if (!user) {
+        console.error("User not signed in");
+        throw new Error("Not authenticated");
+      }
 
       let response;
 
@@ -39,7 +53,6 @@ export default function PostForm({ post }) {
         response = await supabase
           .from("posts")
           .update({
-            // title: values.title,
             cover_image: values.cover_image,
             content: values.content,
             updated_at: new Date().toISOString(),
@@ -52,36 +65,35 @@ export default function PostForm({ post }) {
           .from("posts")
           .insert([
             {
-              // title: values.title,
               cover_image: values.cover_image,
               content: values.content,
-              author_id: user.data.user.id,
+              author_id: user.id,
               created_at: new Date().toISOString(),
             },
           ])
           .select();
       }
 
-        if (response.error) throw response.error;
-        
-        toaster.create({
-            title: isEdit ? "Post updated" : "Post created",
-            description: "Redirecting to posts...",
-            type: "info",
-        })
+      if (response.error) throw response.error;
 
-        actions.setSubmitting(false);
-        navigate("/posts");
-      } catch (error) {
-        console.error("Error saving post:", error.message);
-        actions.setSubmitting(false);
-        toaster.create({
-            title: "Error",
-            description: error.message,
-            type: "error",
-        })
-      }
-      setLoading(false);
+      toaster.create({
+        title: values.id ? "Post updated" : "Post created",
+        description: "Redirecting to posts...",
+        type: "info",
+      });
+
+      actions.setSubmitting(false);
+      navigate("/posts");
+    } catch (error) {
+      console.error("Error saving post:", error.message);
+      actions.setSubmitting(false);
+      toaster.create({
+        title: "Error",
+        description: error.message,
+        type: "error",
+      });
+    }
+    setLoading(false);
   };
 
 
@@ -98,18 +110,44 @@ export default function PostForm({ post }) {
         return (
 
           <Form>
+            <Box
+              width="100%" 
+              height="100%" 
+              minH={"400px"}
+              shadow="2xl"
+              borderColor="formBorder"
+              rounded="lg"
+              p={6}
+              borderWidth="1px"
+              display="flex"
+              flexDir="column"
+              gap={6}>
+              <div className="flex justify-between items-center">
+                <h1 className="!text-2xl md:!text-4xl !font-semibold">
+                    {isEdit ? "Update Post" : "Create a New Post"}
+                </h1>
+                <button 
+                  className="cursor-pointer" 
+                  onClick={() => navigate(-1)} 
+                  type="button"
+                  aria-label="Close">
+                    <HiXCircle size={48} color="bodyText" />
+                </button>
+            </div>
             <Grid
               templateColumns={{ base: "1fr", md: "3fr 1fr" }}
               gap={4}
               alignItems="center"
               width="100%" 
-              height="100%" 
-              minH={"400px"}
+              height="100%"
             >
               <GridItem
                 width="100%" 
                 height="100%" 
+                order={{ base: 2, md: 1 }}
+                overflow="hidden"
               >
+                {/* BlockNote Editor */}
                 <Box 
                   width="100%" 
                   height="100%" 
@@ -123,40 +161,11 @@ export default function PostForm({ post }) {
                   shadow="2xl"
                   minH="400px"
                 >
-                  
-                  <div className="flex flex-col gap-3">
-                      <div className="flex justify-between items-center">
-                          <h1 className="!text-4xl !font-semibold">
-                              {isEdit ? "Update Post" : "Create a New Post"}
-                          </h1>
-                          <button 
-                            className="pointer" 
-                            onClick={() => navigate(-1)} 
-                            type="button"
-                            aria-label="Close">
-                              <HiXCircle size={48} color="bodyText" />
-                          </button>
-                      </div>
-                  </div>
-                  {/* Submit */}
-                  <Button 
-                    rounded={"lg"} 
-                    minW="8rem" 
-                    className="self-end" 
-                    colorScheme="teal" 
-                    isLoading={loading || isSubmitting} 
-                    type="submit"
-                    display="flex"
-                    gap={2}
-                    alignItems={"center"}
-                  >
-                    {loading && <Spinner size={"sm"} mr={2} />}
-                    {isEdit ? "Update" : "Create"}
-                  </Button>
+                  <BlockNoteView editor={editor} className="max-w-"/>
                 </Box>
               </GridItem>
 
-              <GridItem alignSelf="self-start">
+              <GridItem alignSelf="self-start" order={{ base: 1, md: 2 }}>
                 {/* Cover Image  */}
                 <VStack
                   borderWidth="1px" 
@@ -165,30 +174,88 @@ export default function PostForm({ post }) {
                   p={4}
                   spacing={4}
                   cursor="pointer"
-                  shadow="2xl" 
+                  shadow="2xl"
                 >
-                  <Box w="100%" h="200px" bg="gray.100" rounded="md">
-                    {uploadedFiles.length === 0 ? (
-                      <Box textAlign="center" pt={20}>No images yet</Box>
-                    ) : (
-                      <VStack spacing={2}>
-                        {uploadedFiles.map((file, i) => (
-                          <Box key={i} w="full" p={2} bg="gray.200" rounded="md">
-                            {file.name}
+                  <Box w="100%" h="200px" bg="buttonText" rounded="md">
+                    {!file ? (fileUploading ? 
+                         <Box 
+                            width="100%" 
+                            height="100%" 
+                            display="flex" 
+                            alignItems="center" 
+                            justifyContent="center"
+                          >
+                            <Progress.Root width="30%" value={null} radius="md">
+                              <Progress.Track borderRadius="md" bg="buttonBg">
+                                <Progress.Range borderRadius="lg" bg="buttonActiveText"/>
+                              </Progress.Track>
+                            </Progress.Root>
+                          </Box> :
+                         <Box 
+                            textAlign="center" 
+                            pt={20} 
+                            color="buttonBg" 
+                            fontFamily="'Montserrat', sans-serif"
+                            fontWeight={500}
+                          >
+                            Click on the text below to select a cover image for your Post.
                           </Box>
-                        ))}
+                    ) : (
+                      <VStack spacing={2} height="100%">
+                        {fileUploading ? 
+                          <Box 
+                            width="100%" 
+                            height="100%" 
+                            display="flex" 
+                            alignItems="center" 
+                            justifyContent="center"
+                          >
+                            <Progress.Root width="30%" value={null} radius="md">
+                              <Progress.Track borderRadius="md" bg="buttonBg">
+                                <Progress.Range borderRadius="lg" bg="buttonActiveText"/>
+                              </Progress.Track>
+                            </Progress.Root>
+                          </Box> :
+                          <Image
+                            src={URL.createObjectURL(file)}
+                            alt={file?.name}
+                            height="100%"
+                            mx="auto"
+                            rounded="md"
+                            objectFit="cover"
+                          />
+                        }
                       </VStack>
                     )}
                   </Box>
                   <Input
                     type="file"
-                    multiple
+                    name="cover_image"
                     onChange={handleFileChange}
                     variant="filled"
+                    cursor='pointer'
                   />
                 </VStack>
               </GridItem>
             </Grid>
+
+            {/* Submit */}
+            <Button 
+              rounded={"lg"} 
+              minW="8rem" 
+              className="self-end" 
+              colorScheme="teal" 
+              isLoading={loading || isSubmitting} 
+              type="submit"
+              display="flex"
+              gap={2}
+              alignItems={"center"}
+            >
+              {loading && <Spinner size={"sm"} mr={2} />}
+              {isEdit ? "Update" : "Create"}
+            </Button>
+          </Box>
+
           </Form>
         );
       }}
