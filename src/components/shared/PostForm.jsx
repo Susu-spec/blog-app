@@ -1,6 +1,17 @@
 import { Formik, Form, Field } from "formik";
-import { Input, Button, Spinner, Box, Flex, Grid, GridItem, VStack, Image, Progress } from "@chakra-ui/react";
-import {  useBlockNote } from "@blocknote/react";
+import { 
+  Input, 
+  Button, 
+  Spinner, 
+  Box, 
+  Flex, 
+  Grid, 
+  GridItem, 
+  VStack, 
+  Image, 
+  Progress 
+} from "@chakra-ui/react";
+import {  useBlockNote, useCreateBlockNote } from "@blocknote/react";
 import "@blocknote/core/style.css";
 import { BlockNoteView } from "@blocknote/mantine";
 import { HiXCircle } from "react-icons/hi2";
@@ -14,21 +25,21 @@ import { useUser } from "@supabase/auth-helpers-react";
 export default function PostForm({ post }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState([])
-  const [file, setFile] = useState(null);
   const [fileUploading, setFileUploading] = useState(false);
 
   const initialValues = {
+    id: post?.id || "",
+    cover_image: post?.cover_image || null,
     content: post?.content || "",
   };
 
   const isEdit = Boolean(post);
+  const editor = useBlockNote();
 
   const handleFileChange = (e) => {
     setFileUploading(true);
     setTimeout(() => {
       setFileUploading(false);
-      setFile(e.target.files[0])
     }, 2000);
   }
 
@@ -46,14 +57,34 @@ export default function PostForm({ post }) {
         throw new Error("Not authenticated");
       }
 
-      let response;
+      let coverUrl = post?.cover_image || null;
 
+      // Upload cover image if it's a file
+      if (values.cover_image instanceof File) {
+        const file = values.cover_image;
+        const fileExt = file.name.split(".").pop();
+        const filePath = `${user.id}/${Date.now()}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from("post-covers")
+          .upload(filePath, file, { upsert: true });
+
+        if (uploadError) throw uploadError;
+
+        const { data } = supabase.storage
+          .from("post-covers")
+          .getPublicUrl(filePath);
+
+        coverUrl = data.publicUrl;
+      }
+
+      let response;
       if (values.id) {
         // update
         response = await supabase
           .from("posts")
           .update({
-            cover_image: values.cover_image,
+            cover_image: coverUrl,
             content: values.content,
             updated_at: new Date().toISOString(),
           })
@@ -65,7 +96,7 @@ export default function PostForm({ post }) {
           .from("posts")
           .insert([
             {
-              cover_image: values.cover_image,
+              cover_image: coverUrl,
               content: values.content,
               author_id: user.id,
               created_at: new Date().toISOString(),
@@ -98,17 +129,19 @@ export default function PostForm({ post }) {
 
 
   return (
-    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-      {({ isSubmitting, setFieldValue, errors, touched }) => {
-        const editor = useBlockNote({
-          onChange: (editor) => {
-            const json = editor.topLevelBlocks;
-            setFieldValue("content", JSON.stringify(json));
-          },
-        });
+    <Formik 
+      initialValues={initialValues} 
+      onSubmit={handleSubmit}
+    >
+      {({ 
+        values, 
+        isSubmitting, 
+        setFieldValue, 
+        errors, 
+        touched 
+      }) => {
 
         return (
-
           <Form>
             <Box
               width="100%" 
@@ -161,7 +194,12 @@ export default function PostForm({ post }) {
                   shadow="2xl"
                   minH="400px"
                 >
-                  <BlockNoteView editor={editor} className="max-w-"/>
+                  <BlockNoteView 
+                    editor={editor} 
+                    onChange={() => {
+                      const json = editor.topLevelBlocks;
+                      setFieldValue("content", JSON.stringify(json));
+                  }}/>
                 </Box>
               </GridItem>
 
@@ -177,7 +215,7 @@ export default function PostForm({ post }) {
                   shadow="2xl"
                 >
                   <Box w="100%" h="200px" bg="buttonText" rounded="md">
-                    {!file ? (fileUploading ? 
+                    {!values?.cover_image ? (fileUploading ? 
                          <Box 
                             width="100%" 
                             height="100%" 
@@ -217,8 +255,8 @@ export default function PostForm({ post }) {
                             </Progress.Root>
                           </Box> :
                           <Image
-                            src={URL.createObjectURL(file)}
-                            alt={file?.name}
+                            src={URL.createObjectURL(values.cover_image)}
+                            alt={values?.cover_image?.name}
                             height="100%"
                             mx="auto"
                             rounded="md"
@@ -231,7 +269,12 @@ export default function PostForm({ post }) {
                   <Input
                     type="file"
                     name="cover_image"
-                    onChange={handleFileChange}
+                    accept="images/*"
+                    onChange={(e) => {
+                      const selectedImage = e.target.files[0];
+                      setFieldValue("cover_image", selectedImage);
+                      handleFileChange(e)
+                    }}
                     variant="filled"
                     cursor='pointer'
                   />
@@ -255,8 +298,7 @@ export default function PostForm({ post }) {
               {isEdit ? "Update" : "Create"}
             </Button>
           </Box>
-
-          </Form>
+        </Form>
         );
       }}
     </Formik>
