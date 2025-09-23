@@ -144,6 +144,8 @@ export default function PostForm({ post }) {
     >
       {({ 
         values, 
+        handleChange,
+        handleBlur,
         isSubmitting, 
         setFieldValue, 
         errors, 
@@ -249,7 +251,10 @@ export default function PostForm({ post }) {
                         md: "16.875rem"
                       }}
                       shadow="2xl"
-                      name="500"
+                      name="title"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.title}
                     />
                   </Flex>
 
@@ -275,6 +280,9 @@ export default function PostForm({ post }) {
                       }}
                       shadow="2xl"
                       name="description"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.description}
                     />
                   </Flex>
 
