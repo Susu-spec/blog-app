@@ -2,10 +2,10 @@ import Layout from "@/components/layout/Layout";
 import PageWrapper from "@/components/layout/PageWrapper";
 import CreatePost from "@/pages/CreatePost";
 import HomePage from "@/pages/HomePage";
-import LoginPage from "@/pages/LoginPage";
+import LoginPage from "@/pages/auth/LoginPage";
 import PostDetails from "@/pages/PostDetail";
 import PostEditor from "@/pages/PostEditor";
-import SignupPage from "@/pages/SignupPage";
+import SignupPage from "@/pages/auth/SignupPage";
 import { createBrowserRouter } from "react-router";
 import ProtectedRoute from "./ProtectedRoute";
 
