@@ -16,6 +16,7 @@ export default function SignupPage() {
     
 
     const SignupSchema = Yup.object().shape({
+        name: Yup.string().required("Required"),
         email: Yup.string().email("Invalid email").required("Required"),
         password: Yup.string()
         .min(6, "Password must be at least 6 characters")
@@ -29,11 +30,11 @@ export default function SignupPage() {
     });
 
     const handleSignup = async (values, actions) => {
-        console.log("Signup attempt:", values);
         setAuthError("");
         setLoading(true);
 
         const { error } = await supabase.auth.signUp({
+            name: values.name,
             email: values.email,
             password: values.password,
             confirmPassword: values.confirmPassword
@@ -85,7 +86,7 @@ export default function SignupPage() {
                 gap={4}
             >
                 <Formik
-                    initialValues={{ email: "", password: "", confirmPassword: ""}}
+                    initialValues={{ name: "", email: "", password: "", confirmPassword: ""}}
                     validationSchema={SignupSchema}
                     onSubmit={handleSignup}
                     >
@@ -100,6 +101,24 @@ export default function SignupPage() {
                                     </div>
 
                                     <div className="flex flex-col gap-3 items-center">
+                                        <Field name="name">
+                                            {({ field }) => (
+                                            <FormControl isInvalid={!!errors.name && touched.name} className="flex flex-col gap-2 w-full">
+                                                <FormLabel htmlFor="name" className="!font-montserrat">Name</FormLabel>
+                                                <Input
+                                                    {...field} 
+                                                    id="name"
+                                                    type="text" 
+                                                    placeholder="Your Preferred Author Name" 
+                                                    height="3rem"
+                                                    borderRadius="lg"
+                                                />
+                                                <FormErrorMessage className="text-red-300 !text-xs !font-montserrat">
+                                                    {errors.name}
+                                                </FormErrorMessage>
+                                            </FormControl>
+                                            )}
+                                        </Field>
                                          <Field name="email">
                                             {({ field }) => (
                                             <FormControl isInvalid={!!errors.email && touched.email} className="flex flex-col gap-2 w-full">
