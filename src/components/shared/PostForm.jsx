@@ -181,7 +181,7 @@ export default function PostForm({ post }) {
               templateColumns={{ base: "1fr", md: "3fr 1.5fr" }}
               gap={{
                 base: 8,
-                md: 2
+                md: 5
               }}
               alignItems="center"
               width="100%" 
