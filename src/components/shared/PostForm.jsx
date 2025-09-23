@@ -9,7 +9,9 @@ import {
   GridItem, 
   VStack, 
   Image, 
-  Progress 
+  Progress, 
+  Textarea,
+  Text
 } from "@chakra-ui/react";
 import {  useBlockNote, useCreateBlockNote } from "@blocknote/react";
 import "@blocknote/core/style.css";
@@ -21,6 +23,7 @@ import { supabase } from "@/lib/supabase";
 import { toaster } from "../ui/toaster";
 import React, { useState } from "react";
 import { useUser } from "@supabase/auth-helpers-react";
+import { FormLabel } from "@chakra-ui/form-control";
 
 export default function PostForm({ post }) {
   const navigate = useNavigate();
@@ -29,6 +32,8 @@ export default function PostForm({ post }) {
 
   const initialValues = {
     id: post?.id || "",
+    title: post?.title || "",
+    description: post?.description || "",
     cover_image: post?.cover_image || null,
     content: post?.content || "",
   };
@@ -84,6 +89,8 @@ export default function PostForm({ post }) {
         response = await supabase
           .from("posts")
           .update({
+            title: values.title,
+            description: values.description,
             cover_image: coverUrl,
             content: values.content,
             updated_at: new Date().toISOString(),
@@ -96,6 +103,8 @@ export default function PostForm({ post }) {
           .from("posts")
           .insert([
             {
+              title: values.title,
+              description: values.description,
               cover_image: coverUrl,
               content: values.content,
               author_id: user.id,
@@ -154,7 +163,8 @@ export default function PostForm({ post }) {
               borderWidth="1px"
               display="flex"
               flexDir="column"
-              gap={6}>
+              gap={6}
+              pos="relative">
               <div className="flex justify-between items-center">
                 <h1 className="!text-2xl md:!text-4xl !font-semibold">
                     {isEdit ? "Update Post" : "Create a New Post"}
@@ -168,8 +178,11 @@ export default function PostForm({ post }) {
                 </button>
             </div>
             <Grid
-              templateColumns={{ base: "1fr", md: "3fr 1fr" }}
-              gap={4}
+              templateColumns={{ base: "1fr", md: "3fr 1.5fr" }}
+              gap={{
+                base: 8,
+                md: 2
+              }}
               alignItems="center"
               width="100%" 
               height="100%"
@@ -179,106 +192,179 @@ export default function PostForm({ post }) {
                 height="100%" 
                 order={{ base: 2, md: 1 }}
                 overflow="hidden"
+                alignSelf="stretch"
               >
-                {/* BlockNote Editor */}
-                <Box 
-                  width="100%" 
-                  height="100%" 
-                  borderWidth="1px" 
-                  borderColor="formBorder"
-                  rounded="lg" 
-                  p={6} 
-                  display="flex" 
-                  flexDir="column"
-                  justifyContent="space-between"
-                  shadow="2xl"
-                  minH="400px"
-                >
-                  <BlockNoteView 
-                    editor={editor} 
-                    onChange={() => {
-                      const json = editor.topLevelBlocks;
-                      setFieldValue("content", JSON.stringify(json));
-                  }}/>
-                </Box>
+                <Flex direction="column" gap={2} height="100%">
+                    <FormLabel
+                      fontWeight={500}
+                      color="buttonText"
+                      htmlFor="description"
+                    >
+                      Post content
+                    </FormLabel>
+                    {/* BlockNote Editor */}
+                    <Box 
+                      width="100%" 
+                      height="100%" 
+                      borderWidth="1px" 
+                      borderColor="formBorder"
+                      rounded="lg" 
+                      p={6} 
+                      display="flex" 
+                      flexDir="column"
+                      justifyContent="space-between"
+                      shadow="2xl"
+                      minH="400px"
+                    >
+                      <BlockNoteView 
+                        editor={editor} 
+                        onChange={() => {
+                          const json = editor.topLevelBlocks;
+                          setFieldValue("content", JSON.stringify(json));
+                      }}/>
+                    </Box>
+                </Flex>
               </GridItem>
 
               <GridItem alignSelf="self-start" order={{ base: 1, md: 2 }}>
-                {/* Cover Image  */}
-                <VStack
-                  borderWidth="1px" 
-                  borderColor="formBorder"
-                  rounded="lg"
-                  p={4}
-                  spacing={4}
-                  cursor="pointer"
-                  shadow="2xl"
-                >
-                  <Box w="100%" h="200px" bg="buttonText" rounded="md">
-                    {!values?.cover_image ? (fileUploading ? 
-                         <Box 
-                            width="100%" 
-                            height="100%" 
-                            display="flex" 
-                            alignItems="center" 
-                            justifyContent="center"
-                          >
-                            <Progress.Root width="30%" value={null} radius="md">
-                              <Progress.Track borderRadius="md" bg="buttonBg">
-                                <Progress.Range borderRadius="lg" bg="buttonActiveText"/>
-                              </Progress.Track>
-                            </Progress.Root>
-                          </Box> :
-                         <Box 
-                            textAlign="center" 
-                            pt={20} 
-                            color="buttonBg" 
-                            fontFamily="'Montserrat', sans-serif"
-                            fontWeight={500}
-                          >
-                            Click on the text below to select a cover image for your Post.
-                          </Box>
-                    ) : (
-                      <VStack spacing={2} height="100%">
-                        {fileUploading ? 
-                          <Box 
-                            width="100%" 
-                            height="100%" 
-                            display="flex" 
-                            alignItems="center" 
-                            justifyContent="center"
-                          >
-                            <Progress.Root width="30%" value={null} radius="md">
-                              <Progress.Track borderRadius="md" bg="buttonBg">
-                                <Progress.Range borderRadius="lg" bg="buttonActiveText"/>
-                              </Progress.Track>
-                            </Progress.Root>
-                          </Box> :
-                          <Image
-                            src={URL.createObjectURL(values.cover_image)}
-                            alt={values?.cover_image?.name}
-                            height="100%"
-                            mx="auto"
-                            rounded="md"
-                            objectFit="cover"
-                          />
-                        }
-                      </VStack>
-                    )}
-                  </Box>
-                  <Input
-                    type="file"
-                    name="cover_image"
-                    accept="images/*"
-                    onChange={(e) => {
-                      const selectedImage = e.target.files[0];
-                      setFieldValue("cover_image", selectedImage);
-                      handleFileChange(e)
-                    }}
-                    variant="filled"
-                    cursor='pointer'
-                  />
-                </VStack>
+                <Flex direction="column" gap={8}>
+
+                  {/* Title */}
+                  <Flex direction="column" gap={2} >
+                    <FormLabel
+                      fontWeight={500}
+                      color="buttonText"
+                      htmlFor="title"
+                    >
+                      Post title
+                    </FormLabel>
+                    <Textarea
+                      borderWidth="1px" 
+                      borderColor="formBorder"
+                      rounded="lg"
+                      p={4}
+                      spacing={4}
+                      minH={{
+                        base: "10rem",
+                        md: "16.875rem"
+                      }}
+                      shadow="2xl"
+                      name="500"
+                    />
+                  </Flex>
+
+
+                  {/* Description */}
+                  <Flex direction="column" gap={2} >
+                    <FormLabel
+                      fontWeight={500}
+                      color="buttonText"
+                      htmlFor="description"
+                    >
+                      Post description
+                    </FormLabel>
+                    <Textarea
+                      borderWidth="1px" 
+                      borderColor="formBorder"
+                      rounded="lg"
+                      p={4}
+                      spacing={4}
+                      minH={{
+                        base: "10rem",
+                        md: "16.875rem"
+                      }}
+                      shadow="2xl"
+                      name="description"
+                    />
+                  </Flex>
+
+
+                  {/* Cover Image  */}
+                  <Flex direction="column" gap={2} >
+                    <FormLabel
+                      fontWeight={500}
+                      color="buttonText"
+                      htmlFor="description"
+                    >
+                      Post cover image
+                    </FormLabel>
+                    <VStack
+                      borderWidth="1px" 
+                      borderColor="formBorder"
+                      rounded="lg"
+                      p={4}
+                      spacing={4}
+                      cursor="pointer"
+                      shadow="2xl"
+                    >
+
+                      <Box w="100%" h="200px" bg="buttonText" rounded="md">
+                        {!values?.cover_image ? (fileUploading ? 
+                            <Box 
+                                width="100%" 
+                                height="100%" 
+                                display="flex" 
+                                alignItems="center" 
+                                justifyContent="center"
+                              >
+                                <Progress.Root width="30%" value={null} radius="md">
+                                  <Progress.Track borderRadius="md" bg="buttonBg">
+                                    <Progress.Range borderRadius="lg" bg="buttonActiveText"/>
+                                  </Progress.Track>
+                                </Progress.Root>
+                              </Box> :
+                            <Box 
+                                textAlign="center" 
+                                pt={20} 
+                                color="buttonBg" 
+                                fontFamily="'Montserrat', sans-serif"
+                                fontWeight={500}
+                              >
+                                Click on the text below to select a cover image for your Post.
+                              </Box>
+                        ) : (
+                          <VStack spacing={2} height="100%">
+                            {fileUploading ? 
+                              <Box 
+                                width="100%" 
+                                height="100%" 
+                                display="flex" 
+                                alignItems="center" 
+                                justifyContent="center"
+                              >
+                                <Progress.Root width="30%" value={null} radius="md">
+                                  <Progress.Track borderRadius="md" bg="buttonBg">
+                                    <Progress.Range borderRadius="lg" bg="buttonActiveText"/>
+                                  </Progress.Track>
+                                </Progress.Root>
+                              </Box> :
+                              <Image
+                                src={URL.createObjectURL(values.cover_image)}
+                                alt={values?.cover_image?.name}
+                                height="100%"
+                                mx="auto"
+                                rounded="md"
+                                objectFit="cover"
+                              />
+                            }
+                          </VStack>
+                        )}
+                      </Box>
+                      <Input
+                        type="file"
+                        name="cover_image"
+                        accept="images/*"
+                        onChange={(e) => {
+                          const selectedImage = e.target.files[0];
+                          setFieldValue("cover_image", selectedImage);
+                          handleFileChange(e)
+                        }}
+                        variant="filled"
+                        cursor='pointer'
+                      />
+                    </VStack>
+                  </Flex>
+                </Flex>
               </GridItem>
             </Grid>
 
