@@ -1,17 +1,18 @@
-import { Box, Flex, Heading, Icon, Image, LinkBox, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Icon, Image, LinkBox, Skeleton, Text } from "@chakra-ui/react";
 import { HiArrowRight } from "react-icons/hi2";
 import { useNavigate } from "react-router";
 
 export default function PostCard({ 
     id,
-    title, 
-    subtitle, 
     img, 
     date, 
-    author 
+    content,
+    authorName
 }) {
 
     const navigate = useNavigate();
+    const { blocks } = content;
+    const { title, subtitle } = extractMeta(blocks);
 
     return (
         <LinkBox
@@ -42,12 +43,17 @@ export default function PostCard({
                     borderRadius="sm"
                     aspectRatio="auto"
                 >
-                    <Image
-                        borderRadius="sm"
-                        src={img}
-                        width="100%"
-                        height={252}
-                    />
+                    {!img ? (
+                        <Skeleton height={252} width="100%" />) :
+                        <Image
+                            borderRadius="sm"
+                            src={img}
+                            width="100%"
+                            height={252}
+                            objectFit="cover"
+                        />
+                    }
+                    
                 </Box>
                 <Flex
                     flexDirection="column"
@@ -68,7 +74,7 @@ export default function PostCard({
                                 letterSpacing="-.01em"
                                 width="100%"
                             >
-                                {author?.name}
+                                {authorName || "Unknown Author"}
                                 <Text 
                                     as="span" 
                                     display="inline-block" 
@@ -105,4 +111,15 @@ export default function PostCard({
             </Flex>
         </LinkBox>
     )
+}
+
+
+function extractMeta(blocks) {
+  const titleBlock = blocks?.find(b => b.type === "heading");
+  const subtitleBlock = blocks?.find(b => b.type === "paragraph");
+
+  return {
+    title: titleBlock?.content?.[0]?.text || "Untitled",
+    subtitle: subtitleBlock?.content?.[0]?.text || "No subtitle."
+  };
 }
