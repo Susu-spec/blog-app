@@ -21,7 +21,7 @@ import { useNavigate } from "react-router";
 import { LuX } from "react-icons/lu";
 import { supabase } from "@/lib/supabase";
 import { toaster } from "../ui/toaster";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useUser } from "@supabase/auth-helpers-react";
 import { FormLabel } from "@chakra-ui/form-control";
 
@@ -29,6 +29,7 @@ export default function PostForm({ post }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [fileUploading, setFileUploading] = useState(false);
+
 
   const initialValues = {
     id: post?.id || "",
@@ -118,12 +119,12 @@ export default function PostForm({ post }) {
 
       toaster.create({
         title: values.id ? "Post updated" : "Post created",
-        description: "Redirecting to posts...",
+        description: values.id ? "Redirecting to post..." : "Redirecting to posts...",
         type: "info",
       });
 
       actions.setSubmitting(false);
-      navigate("/");
+      values.id ? navigate(`/posts/${values.id}`) : navigate("/");
     } catch (error) {
       console.error("Error saving post:", error.message);
       actions.setSubmitting(false);
@@ -136,10 +137,22 @@ export default function PostForm({ post }) {
     setLoading(false);
   };
 
+  useEffect(() => {
+    if (post?.content) {
+      try {
+        const parsed = JSON.parse(post.content);
+        editor.replaceBlocks(editor.topLevelBlocks, parsed);
+      } catch (err) {
+        console.error("Invalid content JSON:", err);
+      }
+    }
+  }, [post?.content, editor]);
+
 
   return (
     <Formik 
       initialValues={initialValues} 
+      enableReinitialize
       onSubmit={handleSubmit}
     >
       {({ 
@@ -347,7 +360,7 @@ export default function PostForm({ post }) {
                                 </Progress.Root>
                               </Box> :
                               <Image
-                                src={URL.createObjectURL(values.cover_image)}
+                                src={isEdit ? values.cover_image : URL.createObjectURL(values.cover_image)}
                                 alt={values?.cover_image?.name}
                                 height="100%"
                                 mx="auto"
