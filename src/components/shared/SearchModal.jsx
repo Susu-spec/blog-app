@@ -1,19 +1,33 @@
 import { usePosts } from "@/hooks/usePosts";
 import { Box, Button, Dialog, Flex, Icon, Input, Kbd, Portal, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { debounce } from "lodash";
+import { useCallback, useMemo, useState } from "react";
 import { HiArrowRight, HiMagnifyingGlass } from "react-icons/hi2";
+import { Link } from "react-router";
 
 export default function SearchModal() {
-    const [search, setSearch] = useState("");
     const { posts } = usePosts();
-    const [items] = useState(posts);
+    const [query, setQuery] = useState("");
 
-    const filtered = items.filter((item) =>
-        item.title.toLowerCase().includes(search.toLowerCase())
+    const debouncedSearch = useCallback(
+        debounce((value) => {
+            setQuery(value);
+        }, 300),
+        [300]
     );
 
-    // implement debounced search
+    const handleSearch = (e) => {
+        debouncedSearch(e.target.value);
+    };
+
+    const filtered = useMemo(() => {
+        if (!query) return posts;
+        return posts.filter((item) =>
+            item?.title?.toLowerCase().includes(query.toLowerCase())
+        );
+    }, [query, posts]);
+
     const MotionBox = motion.div;
 
     return (
@@ -52,7 +66,9 @@ export default function SearchModal() {
                         <Dialog.Body 
                             maxWidth={600} 
                             height={450}
+                            maxHeight={600}
                             padding={0}
+                            overflowY="scroll"
                         >
                             <>
                                 <Input 
@@ -62,7 +78,7 @@ export default function SearchModal() {
                                     placeholder="Search now..."
                                     border="none"
                                     borderBottom={"1px solid hsl(0, 0%, 100%, .05)"}
-                                    onChange={(e) => setSearch(e.target.value)}
+                                    onChange={handleSearch}
                                     _focus={{ outline: "none" }}
                                     _focusVisible={{ outline: "none" }}
                                     _active={{ outline: "none" }}
@@ -89,28 +105,29 @@ export default function SearchModal() {
                                         )
                                             : (
                                                 filtered.map((item, index) => (
-                                                    <Flex
-                                                        key={index} 
-                                                        padding={".75rem 1.125rem"} 
-                                                        cursor="pointer" 
-                                                        alignItems="center"
-                                                        gap={3}
-                                                        _hover={{ backgroundColor: "linkHoverBg" }}
-                                                    >
-                                                        <HiArrowRight
-                                                            width="14px" 
-                                                            height="14px" 
-                                                            _hover={{ color: "bodyText" }}
-                                                        />
-                                                        <Text 
-                                                            _hover={{ color: "bodyText" }} 
+                                                    <Link to={`/posts/${item?.id}`}>
+                                                        <Flex
+                                                            key={index} 
+                                                            padding={".75rem 1.125rem"} 
+                                                            cursor="pointer" 
+                                                            alignItems="center"
+                                                            gap={3}
+                                                            _hover={{ backgroundColor: "linkHoverBg" }}
                                                         >
-                                                            {item.title}
-                                                        </Text>
-                                                    </Flex>
+                                                            <HiArrowRight
+                                                                width="14px" 
+                                                                height="14px" 
+                                                                _hover={{ color: "bodyText" }}
+                                                            />
+                                                            <Text 
+                                                                _hover={{ color: "bodyText" }} 
+                                                            >
+                                                                {item.title}
+                                                            </Text>
+                                                        </Flex>
+                                                    </Link>
                                                 ))
                                             )
-
                                         }
                                     </Box>
                                 </MotionBox>
