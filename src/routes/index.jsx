@@ -4,10 +4,10 @@ import CreatePost from "@/pages/CreatePost";
 import HomePage from "@/pages/HomePage";
 import LoginPage from "@/pages/auth/LoginPage";
 import PostDetails from "@/pages/PostDetail";
-import PostEditor from "@/pages/PostEditor";
 import SignupPage from "@/pages/auth/SignupPage";
 import { createBrowserRouter } from "react-router";
 import ProtectedRoute from "./ProtectedRoute";
+import EditPost from "@/pages/EditPost";
 
 export const routes = createBrowserRouter([
     { path: "*", element: <div>404 Not Found.</div> },
@@ -42,7 +42,7 @@ export const routes = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <PageWrapper>
-                            <PostEditor />
+                            <EditPost />
                         </PageWrapper>
                     </ProtectedRoute>
                 )

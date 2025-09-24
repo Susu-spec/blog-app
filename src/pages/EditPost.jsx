@@ -1,0 +1,15 @@
+import PostForm from "@/components/shared/PostForm";
+import { postDetail } from "@/data/post-detail";
+import { usePost } from "@/hooks/usePostDetail";
+import { Box } from "@chakra-ui/react";
+
+export default function EditPost() {
+    const { id } = useParams();
+    const { post, loading, error } = usePost(id);
+
+    return (
+        <Box>
+            <PostForm post={post}/>
+        </Box>
+    )
+}

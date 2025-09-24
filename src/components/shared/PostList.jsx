@@ -8,16 +8,21 @@ export default function PostList({ posts }) {
         return <p className="italic">No posts available.</p>
     }
 
-
     return (
         <Grid
             gapX={0}
-            gapY={16}
+            gapY={{
+                base: 4,
+                md: 16
+            }}
             templateColumns={{ base: "1fr", lg: "1fr 80px 1fr"}}
         >
+
             {posts.map((post, index) => {
                 const { 
                     id, 
+                    title,
+                    description,
                     author_id, 
                     cover_image, 
                     created_at, 
@@ -25,13 +30,32 @@ export default function PostList({ posts }) {
                     content 
                 } = post;
 
+                if (posts.length === 1) {
+
+                    return (
+                        <PostCard
+                            id={id}
+                            key={id}
+                            title={title}
+                            description={description}
+                            img={cover_image}
+                            date={new Date(created_at).toLocaleDateString()}
+                            authorName={author_name}
+                            content={content}
+                        />
+                    )
+                }
+
                 if (index % 2 === 0 && posts[index + 1]) {
+
                     return (
                         <React.Fragment key={id}>
                             <GridItem>
                                 <PostCard
                                     id={id}
                                     key={id}
+                                    title={title}
+                                    description={description}
                                     img={cover_image}
                                     date={new Date(created_at).toLocaleDateString()}
                                     authorName={author_name}
@@ -56,6 +80,8 @@ export default function PostList({ posts }) {
                                 <PostCard
                                     id={posts[index + 1].id}
                                     key={posts[index + 1].id}
+                                    title={posts[index + 1].title}
+                                    description={posts[index + 1].description}
                                     img={posts[index + 1].cover_image}
                                     date={new Date(posts[index + 1].created_at).toLocaleDateString()}
                                     authorName={posts[index + 1].author_name}
@@ -65,7 +91,6 @@ export default function PostList({ posts }) {
                         </React.Fragment>
                     );
                 }
-
                 return null;
             })}
         </Grid>

@@ -1,9 +1,12 @@
+import { extractMeta } from "@/lib/helper";
 import { Box, Flex, Heading, Icon, Image, LinkBox, Skeleton, Text } from "@chakra-ui/react";
 import { HiArrowRight } from "react-icons/hi2";
 import { useNavigate } from "react-router";
 
 export default function PostCard({ 
     id,
+    title,
+    description,
     img, 
     date, 
     content,
@@ -12,11 +15,15 @@ export default function PostCard({
 
     const navigate = useNavigate();
     const { blocks } = content;
-    const { title, subtitle } = extractMeta(blocks);
 
     return (
         <LinkBox
             as="article"
+            shadow="2xl"
+            borderColor="formBorder"
+            rounded="lg"
+            p={6}
+            borderWidth="1px"
             _hover={{ 
                 cursor: "pointer",
                 "& .hover-icon": { 
@@ -42,6 +49,7 @@ export default function PostCard({
                     width="100%"
                     borderRadius="sm"
                     aspectRatio="auto"
+                    bg="gray.950"
                 >
                     {!img ? (
                         <Skeleton height={252} width="100%" />) :
@@ -96,7 +104,7 @@ export default function PostCard({
                         fontSize="1.5rem"
                         lineHeight={1.33}
                         letterSpacing="-0.012em"
-                        fontWeight={500}
+                        fontWeight={600}
                     >
                         {title}
                     </Heading>
@@ -105,7 +113,7 @@ export default function PostCard({
                         color="#8a8f98"
                         overflowWrap="anywhere"
                     >
-                        {subtitle}
+                        {description}
                     </Text>
                 </Flex>
             </Flex>
@@ -114,12 +122,4 @@ export default function PostCard({
 }
 
 
-function extractMeta(blocks) {
-  const titleBlock = blocks?.find(b => b.type === "heading");
-  const subtitleBlock = blocks?.find(b => b.type === "paragraph");
 
-  return {
-    title: titleBlock?.content?.[0]?.text || "Untitled",
-    subtitle: subtitleBlock?.content?.[0]?.text || "No subtitle."
-  };
-}
