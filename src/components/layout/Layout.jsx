@@ -2,6 +2,7 @@ import { Box, Container, Flex } from "@chakra-ui/react";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import { Outlet, useLocation } from "react-router";
+import ScrollToTop from "../shared/ScrollToTop";
 
 export default function Layout() {
     const location = useLocation();
@@ -9,6 +10,7 @@ export default function Layout() {
 
     return (
         <Flex direction="column" minHeight="100vh">
+            <ScrollToTop />
             <Navbar />
             <Box flex="1" as="main">
                 <Container 
