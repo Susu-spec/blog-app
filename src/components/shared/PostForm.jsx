@@ -123,7 +123,7 @@ export default function PostForm({ post }) {
       });
 
       actions.setSubmitting(false);
-      navigate("/posts");
+      navigate("/");
     } catch (error) {
       console.error("Error saving post:", error.message);
       actions.setSubmitting(false);
