@@ -64,9 +64,8 @@ export default function SearchModal() {
                 <Dialog.Positioner>
                     <Dialog.Content>
                         <Dialog.Body 
-                            maxWidth={600} 
-                            height={450}
-                            maxHeight={600}
+                            maxWidth={600}
+                            maxHeight={300}
                             padding={0}
                             overflowY="scroll"
                         >
