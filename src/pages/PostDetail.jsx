@@ -1,5 +1,7 @@
 
+import PageWrapper from "@/components/layout/PageWrapper";
 import BlockRenderer from "@/components/shared/BlockRenderer";
+import Loader from "@/components/shared/Loader";
 import { toaster } from "@/components/ui/toaster";
 import { usePost } from "@/hooks/usePost";
 import { extractMeta } from "@/lib/helper";
@@ -47,85 +49,90 @@ export default function PostDetail() {
 
     if (error) return <p>No post retrieved. Please retry.</p>
 
-    // if (loading) return <p>Retrieving post...</p>
+    if (loading) return <Loader />
 
     return (
-        <Box>
-            <Flex
-                flexDirection="column"
-            >
-                <Box width="100%" textAlign="center" pb={3}>
-                    <Text 
-                        color="linkText" 
-                        fontSize=".8125rem"
-                    >
-                        Now
-                    </Text>
-                </Box>
-                <Heading 
-                    as="h1"
-                    fontSize={{ base: "4xl", lg: "3rem"}}
-                    width="100%"
-                    marginX="auto"
-                    textAlign="center"
+        <PageWrapper>
+            <Box>
+                <Flex
+                    flexDirection="column"
                 >
-                    {title || "No title."}
-                </Heading>
-                <Container
-                    as="article"
-                >
-                    <Box
-                        marginY={{ base: 6, lg: 12 }}
+                    <Box width="100%" textAlign="center" pb={3}>
+                        <Text 
+                            color="linkText" 
+                            fontSize=".8125rem"
+                        >
+                            Now
+                        </Text>
+                    </Box>
+                    <Heading 
+                        as="h1"
+                        fontSize={{ base: "4xl", lg: "3rem"}}
+                        width="100%"
                         marginX="auto"
+                        textAlign="center"
                     >
-                        {!cover_image ?
-                            <Skeleton width="100%" height={440} /> :
-                            <Image 
-                                src={cover_image}
-                                borderRadius="sm"
-                                width="100%"
-                                height={440}
-                                objectFit={{ base: "fill", lg: "cover" }}
-                            />
-                        }
-                    </Box>
-                    <Flex color="linkText" alignItems="center" justifyContent="center">
-                        <Text as="span">{author_name || "Unknown Author"}</Text>
-                        <Text as="span" marginInline=".625rem">·</Text>
-                        <Text as="time">{new Date(created_at).toLocaleDateString()}</Text>
-                        <Text as="span" marginInline=".625rem">·</Text>
-                        {/* Add copy text, trigger toast */}
-                        <div className="flex gap-2.5 items-center">
-                            <button 
-                                onClick={() => handleCopy()} 
-                                className="cursor-pointer">
-                                    Copy Text
-                            </button>
-                            <button 
-                                onClick={() => navigate(`/posts/${id}/edit`)} 
-                                className="cursor-pointer"
-                            >
-                                <LuPencil size={10} color="buttonText" />
-                            </button>
-                        </div>
-                        
-                    </Flex>
-                    <Box 
-                        marginTop={{ base: "2.75rem", lg: "4.75rem" }}
-                        marginBottom={{ base: "4rem", lg: "8rem" }}
-                        marginInline="auto"
-                        maxWidth="prose"
-                        color="bodyText"
+                        {title || "No title."}
+                    </Heading>
+                    <Container
+                        as="article"
                     >
-                        {content !== "" ? 
-                        // ""
-                            <BlockRenderer blocks={blocks} />
-                            :
-                            "No content attached."
-                        }
-                    </Box>
-                </Container>
-            </Flex>
-        </Box>
+                        <Box
+                            marginY={{ base: 6, lg: 12 }}
+                            marginX="auto"
+                        >
+                            {!cover_image ?
+                                <Skeleton width="100%" height={440} /> :
+                                <Image 
+                                    src={cover_image}
+                                    borderRadius="sm"
+                                    width="100%"
+                                    height={440}
+                                    objectFit={{ base: "fill", lg: "cover" }}
+                                />
+                            }
+                        </Box>
+                        <Flex color="linkText" alignItems="center" justifyContent="center">
+                            <Text as="span">{author_name || "Unknown Author"}</Text>
+                            <Text as="span" marginInline=".625rem">·</Text>
+                            <Text as="time">{new Date(created_at).toLocaleDateString()}</Text>
+                            <Text as="span" marginInline=".625rem">·</Text>
+                            {/* Add copy text, trigger toast */}
+                            {/* <div className="flex gap-2.5 items-center"> */}
+                                <button 
+                                    onClick={() => handleCopy()} 
+                                    className="cursor-pointer">
+                                        Copy Text
+                                </button>
+                                <Text as="span" marginInline=".625rem">·</Text>
+                                <button 
+                                    onClick={() => navigate(`/posts/${id}/edit`)} 
+                                    className="cursor-pointer flex gap-1.5 items-center"
+                                >
+                                    Edit Post
+                                    <LuPencil size={12} color="inherit" />
+
+                                </button>
+                            {/* </div> */}
+                            
+                        </Flex>
+                        <Box 
+                            marginTop={{ base: "2.75rem", lg: "4.75rem" }}
+                            marginBottom={{ base: "4rem", lg: "8rem" }}
+                            marginInline="auto"
+                            maxWidth="prose"
+                            color="bodyText"
+                        >
+                            {content !== "" ? 
+                            // ""
+                                <BlockRenderer blocks={blocks} />
+                                :
+                                "No content attached."
+                            }
+                        </Box>
+                    </Container>
+                </Flex>
+            </Box>
+        </PageWrapper>
     )
 }

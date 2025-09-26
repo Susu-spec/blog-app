@@ -25,15 +25,13 @@ export const routes = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <PageWrapper><HomePage /></PageWrapper>
+                element: <HomePage />
             },
             {
                 path: "posts/:id",
                 element: (
                     <ProtectedRoute>
-                        <PageWrapper>
                             <PostDetails />
-                        </PageWrapper>
                     </ProtectedRoute>
                 )
             },
@@ -41,9 +39,7 @@ export const routes = createBrowserRouter([
                 path: "posts/:id/edit",
                 element: (
                     <ProtectedRoute>
-                        <PageWrapper>
                             <EditPost />
-                        </PageWrapper>
                     </ProtectedRoute>
                 )
             },

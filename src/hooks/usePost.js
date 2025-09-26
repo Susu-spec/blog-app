@@ -3,20 +3,32 @@ import { useState, useEffect } from "react";
 
 export function usePost(postId) {
   const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
  useEffect(() => {
   async function fetchPost() {
-      const { data, error } = await supabase
-          .from("posts")
-          .select("*")
-          .eq("id", postId)
-          .single();
+    setLoading(true);
+    const start = new Date();
 
-      if (error) throw error;
-      else setPost(data);
-    }
+    const { data, error } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("id", postId)
+        .single();
+
+    const elapsed = new Date() - start;
+
+        
+    if (error) throw error;
+    else setPost(data);
+
+    const minDuration = 800
+    const delay = Math.max(0, minDuration - elapsed);
+
+    setTimeout(() => setLoading(false), delay);
+
+  }
 
   fetchPost();
 }, []);

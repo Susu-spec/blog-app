@@ -1,13 +1,14 @@
 import { usePosts } from "@/hooks/usePosts";
-import { Box, Button, Dialog, Flex, Icon, Input, Kbd, Portal, Text } from "@chakra-ui/react";
+import { Box, Button, Dialog, Flex, Icon, Input, Kbd, Portal, Spinner, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { debounce } from "lodash";
 import { useCallback, useMemo, useState } from "react";
 import { HiArrowRight, HiMagnifyingGlass } from "react-icons/hi2";
 import { Link } from "react-router";
+import Loader from "./Loader";
 
 export default function SearchModal() {
-    const { posts } = usePosts();
+    const { posts, loading } = usePosts();
     const [query, setQuery] = useState("");
 
     const debouncedSearch = useCallback(
@@ -30,6 +31,8 @@ export default function SearchModal() {
 
     const MotionBox = motion.div;
 
+    if (loading) return <Spinner size="md" color="buttonActiveText"/>
+    
     return (
         <Dialog.Root placement="center">
             <Dialog.Trigger asChild>
@@ -83,7 +86,7 @@ export default function SearchModal() {
                                     _active={{ outline: "none" }}
                                 />
                                 <MotionBox 
-                                    style={{ overflowY: "auto" }}
+                                    style={{ overflowY: "hidden" }}
                                     initial={{ height: 0, opacity: 0 }}
                                     animate={{ height: "auto", opacity: 1 }}
                                     exit={{ height: 0, opacity: 0 }}
