@@ -1,37 +1,38 @@
 import { supabase } from "@/lib/supabase";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export function usePosts() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    async function fetchPosts() {
-      setLoading(true);
-      const start = new Date();
+  const getPosts = useCallback(async () => {
+    setLoading(true);
+    const start = Date.now();
 
+    const { data, error } = await supabase
+      .from("posts")
+      .select(`
+        *,
+        author:author_id(name)
+      `)
+      .order("created_at", { ascending: false });
 
-      const { data, error } = await supabase
-        .from("posts")
-        .select(`
-          *,
-          author:author_id(name)
-        `)
-        .order("created_at", { ascending: false });
+    const elapsed = Date.now() - start;
+    const minDuration = 800;
+    const delay = Math.max(0, minDuration - elapsed);
 
-      const elapsed = Date.now() - start;
-      
-      if (error) console.error(error);
-      else setPosts(data);
-
-      const minDuration = 800;
-      const delay = Math.max(0, minDuration - elapsed);
-
-      setTimeout(() => setLoading(false), delay);
+    if (error) {
+      console.error(error);
+    } else {
+      setPosts(data);
     }
 
-    fetchPosts();
+    setTimeout(() => setLoading(false), delay);
   }, []);
 
-  return { posts, loading };
+  useEffect(() => {
+    getPosts();
+  }, [getPosts]);
+
+  return { posts, loading, getPosts };
 }

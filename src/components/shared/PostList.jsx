@@ -3,7 +3,7 @@ import PostCard from "./PostCard";
 import React from "react";
 import { supabase } from "@/lib/supabase";
 
-export default function PostList({ posts }) {
+export default function PostList({ posts, getPosts }) {
     if (posts.length === 0) {
         return <p className="italic">No posts available.</p>
     }
@@ -42,6 +42,7 @@ export default function PostList({ posts }) {
                             date={new Date(created_at).toLocaleDateString()}
                             authorName={author_name}
                             content={content}
+                            getPosts={getPosts}
                         />
                     )
                 }
@@ -60,6 +61,7 @@ export default function PostList({ posts }) {
                                     date={new Date(created_at).toLocaleDateString()}
                                     authorName={author_name}
                                     content={content}
+                                    getPosts={getPosts}
                                 />
                             </GridItem>
 
@@ -86,6 +88,7 @@ export default function PostList({ posts }) {
                                     date={new Date(posts[index + 1].created_at).toLocaleDateString()}
                                     authorName={posts[index + 1].author_name}
                                     content={posts[index + 1].content}
+                                    getPosts={getPosts}
                                 />
                             </GridItem>
                         </React.Fragment>

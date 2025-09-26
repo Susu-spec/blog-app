@@ -7,7 +7,7 @@ import { usePosts } from "@/hooks/usePosts";
 import { Box, Flex, Heading } from "@chakra-ui/react";
 
 export default function HomePage() {
-    const { posts, loading } = usePosts();
+    const { posts, loading, getPosts } = usePosts();
 
     if (loading) return <Loader />
 
@@ -23,7 +23,7 @@ export default function HomePage() {
                 >
                     <SearchModal />
                 </Box>
-                <PostList posts={posts}/>
+                <PostList posts={posts} getPosts={getPosts} />
             </Box>
         </PageWrapper>
     )

@@ -2,6 +2,7 @@ import { extractMeta } from "@/lib/helper";
 import { Box, Flex, Heading, Icon, Image, LinkBox, Skeleton, Text } from "@chakra-ui/react";
 import { HiArrowRight } from "react-icons/hi2";
 import { useNavigate } from "react-router";
+import DeletePost from "./DeletePostModal";
 
 export default function PostCard({ 
     id,
@@ -10,14 +11,15 @@ export default function PostCard({
     img, 
     date, 
     content,
-    authorName
+    authorName,
+    getPosts
 }) {
 
     const navigate = useNavigate();
     const { blocks } = content;
 
     return (
-        <LinkBox
+        <Box
             as="article"
             shadow="2xl"
             borderColor="formBorder"
@@ -30,10 +32,7 @@ export default function PostCard({
                     opacity: 1, 
                     transform: "translateX(2px)" 
                 },
-            }}
-            // replace with id later
-            onClick={() => navigate(`/posts/${id}`)}
-            
+            }}    
         >
             <Flex
                 gap={5}
@@ -43,13 +42,13 @@ export default function PostCard({
                     lg: 450
                 }}
             >
-                <Box
+                <LinkBox
                     overflow="hidden"
                     maxheight={252}
                     width="100%"
                     borderRadius="sm"
                     aspectRatio="auto"
-                    // bg="gray.950"
+                    onClick={() => navigate(`/posts/${id}`)}
                 >
                     {!img ? (
                         <Skeleton height={252} width="100%" />) :
@@ -62,7 +61,7 @@ export default function PostCard({
                         />
                     }
                     
-                </Box>
+                </LinkBox>
                 <Flex
                     flexDirection="column"
                     gap={{
@@ -92,13 +91,15 @@ export default function PostCard({
                                 </Text>
                                 {date}
                             </Text>
-                            <Icon
-                                as={HiArrowRight}
-                                className="hover-icon"
-                                opacity={0}
-                                transition="all 0.2s ease"
-                                boxSize={4}
-                            />
+                            <LinkBox onClick={() => navigate(`/posts/${id}`)}>
+                                <Icon
+                                    as={HiArrowRight}
+                                    className="hover-icon"
+                                    opacity={0}
+                                    transition="all 0.2s ease"
+                                    boxSize={4}
+                                />
+                            </LinkBox> 
                     </Flex>
                     <Heading as="h3"
                         fontSize="1.5rem"
@@ -108,16 +109,19 @@ export default function PostCard({
                     >
                         {title}
                     </Heading>
-                    <Text
-                        fontSize=".875rem"
-                        color="#8a8f98"
-                        overflowWrap="anywhere"
-                    >
-                        {description}
-                    </Text>
+                    <Flex justifyContent="space-between" alignItems="center" width="100%">
+                        <Text
+                            fontSize=".875rem"
+                            color="#8a8f98"
+                            overflowWrap="anywhere"
+                        >
+                            {description}
+                        </Text>
+                        <DeletePost postId={id} getPosts={getPosts}/>
+                    </Flex>
                 </Flex>
             </Flex>
-        </LinkBox>
+        </Box>
     )
 }
 
