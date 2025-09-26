@@ -83,12 +83,13 @@ export default function PostDetail() {
                         >
                             {!cover_image ?
                                 <Skeleton width="100%" height={440} /> :
+                                // Test fill for larger screens
                                 <Image 
                                     src={cover_image}
                                     borderRadius="sm"
                                     width="100%"
                                     height={440}
-                                    objectFit={{ base: "fill", lg: "cover" }}
+                                    objectFit="fill"
                                 />
                             }
                         </Box>

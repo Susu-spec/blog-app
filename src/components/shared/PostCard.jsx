@@ -49,7 +49,7 @@ export default function PostCard({
                     width="100%"
                     borderRadius="sm"
                     aspectRatio="auto"
-                    bg="gray.950"
+                    // bg="gray.950"
                 >
                     {!img ? (
                         <Skeleton height={252} width="100%" />) :
@@ -58,7 +58,7 @@ export default function PostCard({
                             src={img}
                             width="100%"
                             height={252}
-                            objectFit="cover"
+                            objectFit="fill"
                         />
                     }
                     
