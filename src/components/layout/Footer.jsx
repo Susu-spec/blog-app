@@ -30,7 +30,6 @@ export default function Footer() {
                 marginX="auto"
             >
                 <ToggleThemeButton />
-                <BackToTopButton />
             </Flex>  
 
         </Box>

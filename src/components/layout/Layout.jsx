@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import { Outlet, useLocation } from "react-router";
 import ScrollToTop from "../shared/ScrollToTop";
 import MobileNav from "./MobileNav";
+import BackToTopButton from "../shared/BackToTopButton";
 
 export default function Layout() {
     const location = useLocation();
@@ -33,6 +34,7 @@ export default function Layout() {
             </Box>
             <Footer />
             <MobileNav />
+            <BackToTopButton />
         </Flex>
     )
 }

@@ -2,7 +2,6 @@ import useAuthUser from "@/hooks/useAuthUser";
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router";
 import ToggleThemeButton from "../shared/ToggleThemeButton";
-import BackToTopButton from "../shared/BackToTopButton";
 
 export default function MobileNav() {
     const navigate = useNavigate();
@@ -101,7 +100,6 @@ export default function MobileNav() {
                         Create
                     </Button>
                     <ToggleThemeButton />
-                    <BackToTopButton />
                 </Flex>
         </Box>
     )

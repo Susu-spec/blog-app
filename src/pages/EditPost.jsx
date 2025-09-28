@@ -1,7 +1,6 @@
 import PageWrapper from "@/components/layout/PageWrapper";
 import Loader from "@/components/shared/Loader";
 import PostForm from "@/components/shared/PostForm";
-import { postDetail } from "@/data/post-detail";
 import { usePost } from "@/hooks/usePost";
 import { Box } from "@chakra-ui/react";
 import { useParams } from "react-router";

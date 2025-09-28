@@ -27,7 +27,7 @@ export default function BackToTopButton() {
       <IconButton
         position="fixed"
         bottom="9rem"
-        right="2rem"
+        right="10%"
         aria-label="Back to top"
         onClick={scrollToTop}
         colorScheme="teal"
