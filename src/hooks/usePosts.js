@@ -1,7 +1,9 @@
 import { supabase } from "@/lib/supabase";
 import { useState, useEffect, useCallback } from "react";
 
-export function usePosts() {
+// Note: We did not need to add the author_name column from the backend
+// The `select(...)` syntax already handled that
+export function usePosts( id = null ) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -9,13 +11,20 @@ export function usePosts() {
     setLoading(true);
     const start = Date.now();
 
-    const { data, error } = await supabase
+    let query = supabase
       .from("posts")
       .select(`
         *,
         author:author_id(name)
       `)
       .order("created_at", { ascending: false });
+
+
+    if (id) {
+      query = query.eq("author_id", id);
+    }
+
+    const { data, error } = await query;
 
     const elapsed = Date.now() - start;
     const minDuration = 800;

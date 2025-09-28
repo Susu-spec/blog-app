@@ -1,11 +1,13 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { Flex, Box, Heading, Button, Container, chakra } from '@chakra-ui/react';
+import useAuthUser from '@/hooks/useAuthUser';
 
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuthUser();
 
   const isActive = (path) => location.pathname === path;
 
@@ -62,14 +64,35 @@ const Navbar = () => {
           >
             Home
           </Button>
+          {user ?
+             <Button
+              variant="link"
+              height="2rem"
+              padding={"0 .75rem"}
+              color={isActive('/my-posts') ? "buttonActiveText" : "buttonText"}
+              borderRadius=".5rem"
+              onClick={() => navigate('/my-posts')}
+              backgroundColor={isActive('/my-posts') ? "buttonBg" : "transparent"}
+              _hover={{ 
+                color: "buttonActiveText",
+                backgroundColor: "buttonBg", 
+              }}
+              _active={{
+                color: "buttonActiveText",
+                backgroundColor: "buttonBg", 
+              }}
+            >
+              Your Posts
+            </Button> : ''
+          }
            <Button
             variant="link"
             height="2rem"
             padding={"0 .75rem"}
-            color={"buttonActiveText"}
+            color={isActive('/post/create') ? "buttonActiveText" : "buttonText"}
             borderRadius=".5rem"
             onClick={() => navigate('/post/create')}
-            backgroundColor={"transparent"}
+            backgroundColor={isActive('/post/create') ? "buttonBg" : "transparent"}
             _hover={{ 
               color: "buttonActiveText",
               backgroundColor: "buttonBg", 
@@ -79,28 +102,8 @@ const Navbar = () => {
               backgroundColor: "buttonBg", 
             }}
           >
-            Create
+            Start Writing
           </Button>
-          {/* <Button
-            variant="link"
-            height="2rem"
-            padding="0 .75rem"
-            borderRadius=".5rem"
-            fontWeight={500}
-            color={isActive('/posts') ? "buttonActiveText" : "buttonText"}
-            onClick={() => navigate('/posts')}
-            backgroundColor={isActive('/posts') ? "buttonBg" : "transparent"}
-            _hover={{ 
-              color: "buttonActiveText",
-              backgroundColor: "buttonBg", 
-            }}
-            _active={{
-              color: "buttonActiveText",
-              backgroundColor: "buttonBg", 
-            }}
-          >
-            Posts
-          </Button> */}
         </Flex>
       </Flex>
     </Box>

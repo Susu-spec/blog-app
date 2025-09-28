@@ -2,13 +2,12 @@ import { usePosts } from "@/hooks/usePosts";
 import { Box, Button, Dialog, Flex, Icon, Input, Kbd, Portal, Spinner, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { debounce } from "lodash";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { HiArrowRight, HiMagnifyingGlass } from "react-icons/hi2";
 import { Link } from "react-router";
 import Loader from "./Loader";
 
-export default function SearchModal() {
-    const { posts, loading } = usePosts();
+export default function SearchModal( posts, loading ) {
     const [query, setQuery] = useState("");
 
     const debouncedSearch = useCallback(
@@ -30,6 +29,10 @@ export default function SearchModal() {
     }, [query, posts]);
 
     const MotionBox = motion.div;
+    
+    useEffect(() => {
+        setQuery("")
+    }, [])
 
     if (loading) return <Spinner size="md" color="buttonActiveText"/>
     
@@ -70,7 +73,7 @@ export default function SearchModal() {
                             maxWidth={600}
                             maxHeight={300}
                             padding={0}
-                            overflowY="scroll"
+                            overflowY="auto"
                         >
                             <>
                                 <Input 
