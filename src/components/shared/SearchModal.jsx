@@ -7,14 +7,14 @@ import { HiArrowRight, HiMagnifyingGlass } from "react-icons/hi2";
 import { Link } from "react-router";
 import Loader from "./Loader";
 
-export default function SearchModal( posts, loading ) {
+export default function SearchModal({ posts=[], loading }) {
     const [query, setQuery] = useState("");
 
     const debouncedSearch = useCallback(
         debounce((value) => {
             setQuery(value);
         }, 300),
-        [300]
+        []
     );
 
     const handleSearch = (e) => {
@@ -99,7 +99,7 @@ export default function SearchModal( posts, loading ) {
                                         paddingTop={4}
                                         paddingBottom={2}
                                     >
-                                            {filtered.length === 0 ? (
+                                        {filtered.length === 0 ? (
                                             <Text 
                                                 paddingBlock={5}
                                                 textAlign="center"
@@ -109,7 +109,7 @@ export default function SearchModal( posts, loading ) {
                                             </Text>
                                         )
                                             : (
-                                                filtered.map((item, index) => (
+                                                filtered?.map((item, index) => (
                                                     <Link to={`/posts/${item?.id}`}>
                                                         <Flex
                                                             key={index} 
