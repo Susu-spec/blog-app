@@ -44,6 +44,10 @@ const Navbar = () => {
         <Flex
           gap={2}
           align="center"
+          display={{
+            base: "none",
+            lg: "flex"
+          }}
         >
           <Button
             variant="link"

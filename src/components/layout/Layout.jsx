@@ -3,6 +3,7 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import { Outlet, useLocation } from "react-router";
 import ScrollToTop from "../shared/ScrollToTop";
+import MobileNav from "./MobileNav";
 
 export default function Layout() {
     const location = useLocation();
@@ -15,9 +16,11 @@ export default function Layout() {
             <Box flex="1" as="main">
                 <Container 
                     maxW="1024px"
-                    h="100%"
-                    py={{ base: "3rem", lg: "5rem"}} 
-                    px={6} 
+                    h="100%" 
+                    p={{
+                        base: "3rem 1.5rem 6rem 1.5rem",
+                        lg: "5rem 1.5rem"
+                    }}
                     marginX="auto"
                 >
                     <Outlet context={{ backgroundLocation: state?.backgroundLocation }}/>
@@ -29,6 +32,7 @@ export default function Layout() {
                 </Container>
             </Box>
             <Footer />
+            <MobileNav />
         </Flex>
     )
 }

@@ -3,12 +3,6 @@ import ToggleThemeButton from "../shared/ToggleThemeButton";
 import BackToTopButton from "../shared/BackToTopButton";
 
 export default function Footer() {
-    const scrollToTop = () => {
-         window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }
 
     return (
         <Box 
@@ -23,6 +17,10 @@ export default function Footer() {
             zIndex={999}
             width="100%"
             backgroundColor="navBg"
+            display={{
+                base: "none",
+                lg: "block"
+            }}
         >
            <Flex
                 maxWidth={1024}
