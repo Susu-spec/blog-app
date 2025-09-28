@@ -2,9 +2,9 @@ import { levelFontSize, levelMap } from "@/lib/helper";
 import { Heading, Text } from "@chakra-ui/react";
 import React from "react";
 
-const renderContent = (content: any) =>
-  content?.map((c: any, idx: any) => {
-    const style: any = {}
+const renderContent = (content) =>
+  content?.map((c, idx) => {
+    const style = {}
 
     if (c.styles?.bold) style.fontWeight = "bold";
     if (c.styles?.italic) style.fontStyle = "italic";
@@ -19,7 +19,7 @@ const renderContent = (content: any) =>
   });
 
 
-const BlockRenderer = ({ blocks }: any) => {
+const BlockRenderer = ({ blocks }) => {
   let parsedBlocks = [];
 
   if (Array.isArray(blocks)) {
@@ -44,7 +44,7 @@ const BlockRenderer = ({ blocks }: any) => {
 
   return (
     <>
-      {parsedBlocks?.map((block: any) => {
+      {parsedBlocks?.map((block) => {
         const style = {
           color:
             block.props?.textColor && block.props.textColor !== "default"
@@ -84,7 +84,7 @@ const BlockRenderer = ({ blocks }: any) => {
             const ListTag = block.props?.listType === "numbered" ? "ol" : "ul";
             return (
               <ListTag key={block.id} style={style}>
-                {block.items?.map((item: any, idx: any) => (
+                {block.items?.map((item, idx) => (
                   <li key={idx}>
                     {renderContent(item)}
                     {/* If a list item has children, render them recursively */}
