@@ -3,6 +3,7 @@ import PageWrapper from "@/components/layout/PageWrapper";
 import BlockRenderer from "@/components/shared/BlockRenderer";
 import Loader from "@/components/shared/Loader";
 import { toaster } from "@/components/ui/toaster";
+import useAuthUser from "@/hooks/useAuthUser";
 import { usePost } from "@/hooks/usePost";
 import { Box, Container, Flex, Heading, Image, Skeleton, Text } from "@chakra-ui/react";
 import { HiPencil } from "react-icons/hi2";
@@ -21,8 +22,10 @@ export default function PostDetail() {
         created_at,
         updated_at,
         content,
-        author_name
+        author_name,
+        author_id
     } = post || {};
+    const { user } = useAuthUser();
 
 
    const blocks = content;
@@ -103,13 +106,15 @@ export default function PostDetail() {
                                         Copy Text
                                 </button>
                                 <Text as="span" marginInline=".625rem">·</Text>
-                                <button 
-                                    onClick={() => navigate(`/posts/${id}/edit`)} 
-                                    className="cursor-pointer flex gap-1.5 items-center"
-                                >
-                                    <span className="hidden md:block">Edit Post</span>
-                                    <LuPencil size={12} color="inherit" />
-                                </button>                            
+                                {user?.id === author_id ?
+                                    <button 
+                                        onClick={() => navigate(`/posts/${id}/edit`)} 
+                                        className="cursor-pointer flex gap-1.5 items-center"
+                                    >
+                                        <span className="hidden md:block">Edit Post</span>
+                                        <LuPencil size={12} color="inherit" />
+                                    </button> : 
+                                "" }                           
                         </Flex>
                         <Box 
                             marginTop={{ base: "2.75rem", lg: "4.75rem" }}
@@ -119,7 +124,6 @@ export default function PostDetail() {
                             color="bodyText"
                         >
                             {content !== "" ? 
-                            // ""
                                 <BlockRenderer blocks={blocks} />
                                 :
                                 "No content attached."
