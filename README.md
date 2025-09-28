@@ -1,12 +1,58 @@
-# React + Vite
+# Suwayba's Blog App
+This is a generic blog application that lets users create, view, edit, and delete their personal blog posts as well as view other users' blog posts. It takes UI inspiration from [Linear](https://linear.app/now) and is built with React, ChakraUI, and Supabase for the backend.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+## Features
+- Authentication with Supabase (sign up, log in, log out).
+- Homepage showing all posts.
+- "My Posts" page for user-specific content.
+- Create, edit, and delete posts.
+- Search posts
+- Responsive design.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+## Tech Stack
+- Frontend: React, Chakra UI
+- Backend: Supabase (Database + Auth)
+- Deployment: Vercel
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Getting Started
+1. Clone the repo
+```bash
+git clone https://github.com/Susu-spec/blog-app.git
+cd blog-app
+```
+
+2. Install dependencies
+```bash
+npm install
+```
+
+3. Setup environment variables
+Create a `.env` file in the root of the project:
+```bash
+VITE_SUPABASE_URL=your-supabase-url
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
+
+4. Run the project
+```bash
+npm run dev
+```
+
+
+## Project Structure
+```bash
+src/
+ ┣ assets/         # Image assets (App Snapshot)
+ ┣ components/     # UI components (Navbar, SearchModal, etc.)
+ ┣ hooks/          # Custom hooks (useAuthUser, usePosts)
+ ┣ pages/          # Page-level components (Home, MyPosts, CreatePost)
+ ┣ libs/           # Helpers & configs
+ ┣ routes/         # Route level configs
+ ┗ main.jsx        # Entry point
+```
+
+
+##  Live Demo
+Check out the live app here: [susu-blog.vercel.app](https://susu-blog.vercel.app/)
