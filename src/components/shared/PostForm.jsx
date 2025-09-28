@@ -24,6 +24,18 @@ import { toaster } from "../ui/toaster";
 import React, { useEffect, useState } from "react";
 import { useUser } from "@supabase/auth-helpers-react";
 import { FormLabel } from "@chakra-ui/form-control";
+import { mixed, object, string } from "yup";
+
+const postFormSchema = object({
+  title: string().min(3, "Title must be at least 3 characters").required("Title is required"),
+  description: string().min(3, "Description must be at least 3 characters").required("Description is required"),
+  content: string().min(10, "Content must be at least 10 characters").required("Content is required"),
+  cover_image: mixed()
+    .required("Cover image URL is required")
+    .test("fileType", "Only image files are allowed", (value) => {
+      return !value || (value && value.type.startsWith("image/"));
+    }),
+})
 
 export default function PostForm({ post }) {
   const navigate = useNavigate();
@@ -124,7 +136,7 @@ export default function PostForm({ post }) {
       });
 
       actions.setSubmitting(false);
-      values.id ? navigate(`/posts/${values.id}`) : navigate("/");
+      values.id ? navigate(`/posts/${values.id}`) : navigate("/my-posts");
     } catch (error) {
       console.error("Error saving post:", error.message);
       actions.setSubmitting(false);
@@ -151,7 +163,8 @@ export default function PostForm({ post }) {
 
   return (
     <Formik 
-      initialValues={initialValues} 
+      initialValues={initialValues}
+      validationSchema={postFormSchema}
       enableReinitialize
       onSubmit={handleSubmit}
     >
@@ -162,7 +175,9 @@ export default function PostForm({ post }) {
         isSubmitting, 
         setFieldValue, 
         errors, 
-        touched 
+        touched,
+        isValid,
+        dirty
       }) => {
 
         return (
@@ -238,6 +253,7 @@ export default function PostForm({ post }) {
                           setFieldValue("content", JSON.stringify(json));
                       }}/>
                     </Box>
+                    {errors.content && <p className="text-red-500 text-xs">{errors.content}</p>}
                 </Flex>
               </GridItem>
 
@@ -269,6 +285,7 @@ export default function PostForm({ post }) {
                       onBlur={handleBlur}
                       value={values.title}
                     />
+                    {errors.title && touched.title && <p className="text-red-500 text-xs">{errors.title}</p>}
                   </Flex>
 
 
@@ -297,6 +314,7 @@ export default function PostForm({ post }) {
                       onBlur={handleBlur}
                       value={values.description}
                     />
+                    {errors.description && <p className="text-red-500 text-xs">{errors.description}</p>}
                   </Flex>
 
 
@@ -384,6 +402,7 @@ export default function PostForm({ post }) {
                         cursor='pointer'
                       />
                     </VStack>
+                     {errors.cover_image && <p className="text-red-500 text-xs">{errors.cover_image}</p>}
                   </Flex>
                 </Flex>
               </GridItem>
@@ -396,6 +415,7 @@ export default function PostForm({ post }) {
               className="self-end" 
               colorScheme="teal" 
               isLoading={loading || isSubmitting} 
+              disabled={!(isValid && dirty)}
               type="submit"
               display="flex"
               gap={2}
