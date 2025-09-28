@@ -4,7 +4,6 @@ import BlockRenderer from "@/components/shared/BlockRenderer";
 import Loader from "@/components/shared/Loader";
 import { toaster } from "@/components/ui/toaster";
 import { usePost } from "@/hooks/usePost";
-import { extractMeta } from "@/lib/helper";
 import { Box, Container, Flex, Heading, Image, Skeleton, Text } from "@chakra-ui/react";
 import { HiPencil } from "react-icons/hi2";
 import { LuPencil } from "react-icons/lu";
@@ -98,8 +97,6 @@ export default function PostDetail() {
                             <Text as="span" marginInline=".625rem">·</Text>
                             <Text as="time">{new Date(created_at).toLocaleDateString()}</Text>
                             <Text as="span" marginInline=".625rem">·</Text>
-                            {/* Add copy text, trigger toast */}
-                            {/* <div className="flex gap-2.5 items-center"> */}
                                 <button 
                                     onClick={() => handleCopy()} 
                                     className="cursor-pointer">
@@ -110,12 +107,9 @@ export default function PostDetail() {
                                     onClick={() => navigate(`/posts/${id}/edit`)} 
                                     className="cursor-pointer flex gap-1.5 items-center"
                                 >
-                                    Edit Post
+                                    <span className="hidden md:block">Edit Post</span>
                                     <LuPencil size={12} color="inherit" />
-
-                                </button>
-                            {/* </div> */}
-                            
+                                </button>                            
                         </Flex>
                         <Box 
                             marginTop={{ base: "2.75rem", lg: "4.75rem" }}

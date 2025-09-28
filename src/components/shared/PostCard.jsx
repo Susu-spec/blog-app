@@ -1,4 +1,3 @@
-import { extractMeta } from "@/lib/helper";
 import { Box, Flex, Heading, Icon, Image, LinkBox, Skeleton, Text } from "@chakra-ui/react";
 import { HiArrowRight } from "react-icons/hi2";
 import { useNavigate } from "react-router";
