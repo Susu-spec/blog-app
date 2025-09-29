@@ -24,7 +24,7 @@ export default function MobileNav() {
             left="50%"
             transform="translate(-50%, -50%)"
             bottom={-6}
-            zIndex={999}
+            zIndex={99999}
             backgroundColor="navBg"
             p={4}
             boxShadow="lg"
