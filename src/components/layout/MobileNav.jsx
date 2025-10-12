@@ -1,15 +1,21 @@
-import useAuthUser from "@/hooks/useAuthUser";
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router";
 import ToggleThemeButton from "../shared/ToggleThemeButton";
+import { HiLockOpen, HiPower } from "react-icons/hi2";
+import { useColorMode } from "../ui/color-mode";
+import Loader from "../shared/Loader";
+import { useAuth } from "@/providers/AuthProvider";
 
 export default function MobileNav() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { user } = useAuthUser();
+    const { user, loading, logout } = useAuth();
+    const { colorMode } = useColorMode();
 
 
     const isActive = (path) => location.pathname === path;
+
+    if (loading) return <Loader />
 
     return (
         <Box 
@@ -43,6 +49,7 @@ export default function MobileNav() {
                 width="100%"
                 marginX="auto"
             >
+                <ToggleThemeButton />
                 <Button
                     variant="link"
                     padding={".75rem 1rem"}
@@ -99,7 +106,20 @@ export default function MobileNav() {
                     >
                         Create
                     </Button>
-                    <ToggleThemeButton />
+
+                    <Button
+                        title="Click to log out"
+                        backgroundColor="transparent"
+                        color={colorMode === "light" ? "buttonActiveText" : "buttonText"}
+                        padding={0}
+                        onClick={() => logout()}
+                        _hover={{ 
+                            color: "buttonActiveText",
+                            backgroundColor: "buttonBg", 
+                        }}
+                    >
+                        <HiPower />
+                    </Button>
                 </Flex>
         </Box>
     )

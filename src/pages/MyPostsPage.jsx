@@ -2,13 +2,20 @@ import PageWrapper from "@/components/layout/PageWrapper";
 import Loader from "@/components/shared/Loader";
 import PostList from "@/components/shared/PostList";
 import SearchModal from "@/components/shared/SearchModal";
-import useAuthUser from "@/hooks/useAuthUser";
-import { usePosts } from "@/hooks/usePosts";
+import { useAuth } from "@/providers/AuthProvider";
+import { usePosts } from "@/providers/PostsProvider";
 import { Box, Flex, Heading } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 export default function MyPostsPage() {
-    const { user, error } = useAuthUser();
-    const { posts, loading, getPosts } = usePosts(user?.id);
+    const { user, error } = useAuth();
+    const { myPosts, loading, fetchMyPosts } = usePosts(user?.id);
+
+    useEffect(() => {
+        if (user?.id) {
+            fetchMyPosts(user?.id);
+        }
+    }, [fetchMyPosts, user?.id]);
 
     if (loading) return <Loader />
 
@@ -22,9 +29,9 @@ export default function MyPostsPage() {
                     paddingTop={6}
                     paddingBottom={12}
                 >
-                    <SearchModal posts={posts} loading={loading} />
+                    <SearchModal posts={myPosts} loading={loading} />
                 </Box>
-                <PostList posts={posts} getPosts={getPosts} />
+                <PostList posts={myPosts} />
             </Box>
         </PageWrapper>
     )

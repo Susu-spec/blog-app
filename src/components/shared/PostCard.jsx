@@ -2,6 +2,7 @@ import { Box, Flex, Heading, Icon, Image, LinkBox, Skeleton, Text } from "@chakr
 import { HiArrowRight } from "react-icons/hi2";
 import { useNavigate } from "react-router";
 import DeletePost from "./DeletePostModal";
+import { useAuth } from "@/providers/AuthProvider";
 
 export default function PostCard({ 
     id,
@@ -10,12 +11,14 @@ export default function PostCard({
     img, 
     date, 
     content,
+    authorId,
     authorName,
-    getPosts
 }) {
 
     const navigate = useNavigate();
     const { blocks } = content;
+    const { user } = useAuth();
+
 
     return (
         <Box
@@ -116,7 +119,9 @@ export default function PostCard({
                         >
                             {description}
                         </Text>
-                        <DeletePost postId={id} getPosts={getPosts}/>
+                        {user?.id === authorId && 
+                            <DeletePost postId={id} />
+                        }
                     </Flex>
                 </Flex>
             </Flex>

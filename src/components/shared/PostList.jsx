@@ -3,8 +3,8 @@ import PostCard from "./PostCard";
 import React from "react";
 import { supabase } from "@/lib/supabase";
 
-export default function PostList({ posts, getPosts }) {
-    if (posts.length === 0) {
+export default function PostList({ posts }) {
+    if (posts?.length === 0) {
         return <p className="italic">No posts available.</p>
     }
 
@@ -12,13 +12,13 @@ export default function PostList({ posts, getPosts }) {
         <Grid
             gapX={0}
             gapY={{
-                base: 4,
-                md: 16
+                base: 6,
+                lg: 16
             }}
             templateColumns={{ base: "1fr", lg: "1fr 80px 1fr"}}
+            gridAutoFlow={{ lg: "repeat(auto-fit, minmax(min-width, 1fr))" }}
         >
-
-            {posts.map((post, index) => {
+            {posts?.map((post, index) => {
                 const { 
                     id, 
                     title,
@@ -26,50 +26,45 @@ export default function PostList({ posts, getPosts }) {
                     author_id, 
                     cover_image, 
                     created_at, 
-                    author_name, 
+                    author, 
                     content 
                 } = post;
 
-                if (posts.length === 1) {
-
-                    return (
-                        <PostCard
-                            id={id}
-                            key={id}
-                            title={title}
-                            description={description}
-                            img={cover_image}
-                            date={new Date(created_at).toLocaleDateString()}
-                            authorName={author_name}
-                            content={content}
-                            getPosts={getPosts}
-                        />
-                    )
+                // Skip if this post was already rendered as the second item in a pair
+                if (index % 2 === 1) {
+                    return null;
                 }
 
-                if (index % 2 === 0 && posts[index + 1]) {
+                // Check if there's a next post for pairing
+                const nextPost = posts[index + 1];
+                const isLastOddPost = !nextPost;
 
-                    return (
-                        <React.Fragment key={id}>
-                            <GridItem>
-                                <PostCard
-                                    id={id}
-                                    key={id}
-                                    title={title}
-                                    description={description}
-                                    img={cover_image}
-                                    date={new Date(created_at).toLocaleDateString()}
-                                    authorName={author_name}
-                                    content={content}
-                                    getPosts={getPosts}
-                                />
-                            </GridItem>
+                return (
+                    <React.Fragment key={id}>
+                        {/* First post */}
+                        <GridItem>
+                            <PostCard
+                                id={id}
+                                title={title}
+                                description={description}
+                                img={cover_image}
+                                date={new Date(created_at).toLocaleDateString()}
+                                authorName={author?.name}
+                                authorId={author_id}
+                                content={content}
+                            />
+                        </GridItem>
 
+                        {/* Divider - only show if there's a next post */}
+                        {!isLastOddPost && (
                             <GridItem
-                                display="flex"
                                 alignItems="center"
                                 justifySelf="center"
-                                >
+                                display={{
+                                    base: "none",
+                                    lg: "flex"
+                                }}
+                            >
                                 <Box
                                     w="1px"
                                     h="100%"
@@ -77,26 +72,32 @@ export default function PostList({ posts, getPosts }) {
                                     borderRadius="full"
                                 />
                             </GridItem>
+                        )}
 
-                            <GridItem>
+                        {/* Second post or empty space */}
+                        <GridItem>
+                            {nextPost ? (
                                 <PostCard
-                                    id={posts[index + 1].id}
-                                    key={posts[index + 1].id}
-                                    title={posts[index + 1].title}
-                                    description={posts[index + 1].description}
-                                    img={posts[index + 1].cover_image}
-                                    date={new Date(posts[index + 1].created_at).toLocaleDateString()}
-                                    authorName={posts[index + 1].author_name}
-                                    content={posts[index + 1].content}
-                                    getPosts={getPosts}
+                                    id={nextPost.id}
+                                    title={nextPost.title}
+                                    description={nextPost.description}
+                                    img={nextPost.cover_image}
+                                    date={new Date(nextPost.created_at).toLocaleDateString()}
+                                    authorName={nextPost.author?.name}
+                                    authorId={nextPost.author_id}
+                                    content={nextPost.content}
                                 />
-                            </GridItem>
-                        </React.Fragment>
-                    );
-                }
-                return null;
+                            ) : (
+                                // Empty space for odd number of posts
+                                <Box 
+                                    display={{
+                                        base: "hidden",
+                                        lg: "block"
+                                    }}/>
+                            )}
+                        </GridItem>
+                    </React.Fragment>
+                );
             })}
         </Grid>
-
-    )
-}
+)}

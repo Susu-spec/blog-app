@@ -2,12 +2,18 @@ import PageWrapper from "@/components/layout/PageWrapper";
 import Loader from "@/components/shared/Loader";
 import PostList from "@/components/shared/PostList";
 import SearchModal from "@/components/shared/SearchModal";
-import { usePosts } from "@/hooks/usePosts";
+import { usePosts } from "@/providers/PostsProvider";
 import { Box, Flex, Heading } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 export default function HomePage() {
-    const { posts, loading, getPosts } = usePosts();
+    const { allPosts, loading, fetchAllPosts } = usePosts();
 
+    useEffect(() => {
+        fetchAllPosts();
+    }, [fetchAllPosts])
+
+    
     if (loading) return <Loader />
 
     return (
@@ -20,9 +26,9 @@ export default function HomePage() {
                     paddingTop={6}
                     paddingBottom={12}
                 >
-                    <SearchModal posts={posts} loading={loading}/>
+                    <SearchModal posts={allPosts} loading={loading}/>
                 </Box>
-                <PostList posts={posts} getPosts={getPosts} />
+                <PostList posts={allPosts} />
             </Box>
         </PageWrapper>
     )

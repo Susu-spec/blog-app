@@ -1,15 +1,18 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { Flex, Box, Heading, Button, Container, chakra } from '@chakra-ui/react';
-import useAuthUser from '@/hooks/useAuthUser';
+import Loader from '../shared/Loader';
+import { useAuth } from '@/providers/AuthProvider';
 
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuthUser();
+  const { user, loading, logout } = useAuth();
 
   const isActive = (path) => location.pathname === path;
+
+  if (loading) return <Loader />
 
   return (
     <Box
@@ -108,6 +111,28 @@ const Navbar = () => {
           >
             Start Writing
           </Button>
+          {user ? 
+            <Button
+                variant="link"
+                title="Click to log out"
+                height="2rem"
+                padding={"0 .75rem"}
+                color="buttonText"
+                borderRadius=".5rem"
+                onClick={() => logout()}
+                backgroundColor="transparent"
+                _hover={{ 
+                  color: "buttonActiveText",
+                  backgroundColor: "buttonBg", 
+                }}
+                _active={{
+                  color: "buttonActiveText",
+                  backgroundColor: "buttonBg", 
+                }}
+              >
+                Log out
+              </Button> : ''
+            }
         </Flex>
       </Flex>
     </Box>

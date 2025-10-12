@@ -33,7 +33,7 @@ const postFormSchema = object({
   cover_image: mixed()
     .required("Cover image URL is required")
     .test("fileType", "Only image files are allowed", (value) => {
-      return !value || (value && value.type.startsWith("image/"));
+      return !value || (value && value?.type?.startsWith("image/"));
     }),
 })
 

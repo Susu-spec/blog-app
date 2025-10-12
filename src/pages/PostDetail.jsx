@@ -3,34 +3,42 @@ import PageWrapper from "@/components/layout/PageWrapper";
 import BlockRenderer from "@/components/shared/BlockRenderer";
 import Loader from "@/components/shared/Loader";
 import { toaster } from "@/components/ui/toaster";
-import useAuthUser from "@/hooks/useAuthUser";
-import { usePost } from "@/hooks/usePost";
+import { useAuth } from "@/providers/AuthProvider";
+import { usePosts } from "@/providers/PostsProvider";
 import { Box, Container, Flex, Heading, Image, Skeleton, Text } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { HiPencil } from "react-icons/hi2";
 import { LuPencil } from "react-icons/lu";
 import { useNavigate, useParams } from "react-router";
 
 export default function PostDetail() {
     const { id } = useParams();
-    const { post, loading, error } = usePost(id);
-    
+    const { postDetails, loading, error, fetchPost } = usePosts();
+    const post = postDetails[id];
+    const { user } = useAuth();
     const navigate = useNavigate();
-     const {
+
+    useEffect(() => {
+        if (id) {
+            fetchPost(id);
+        }
+    }, [fetchPost, id]);
+
+    const {
         title,
         description,
         cover_image,
         created_at,
         updated_at,
         content,
-        author_name,
+        author,
         author_id
     } = post || {};
-    const { user } = useAuthUser();
 
+    const author_name = author?.name;
+    const blocks = content || [];
 
-   const blocks = content;
-    
-   const handleCopy = async () => {
+    const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(
                 `https://www.susu-blog.vercel.app/posts/${id}`

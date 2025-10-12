@@ -4,11 +4,14 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { toaster } from "../ui/toaster";
 import { HiTrash } from "react-icons/hi2";
-import { usePosts } from "@/hooks/usePosts";
+import { useAuth } from "@/providers/AuthProvider";
+import { usePosts } from "@/providers/PostsProvider";
 
-export default function DeletePost({ postId, getPosts }) {
+export default function DeletePost({ postId }) {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+    const { user } = useAuth();
+    const { fetchAllPosts, fetchMyPosts } = usePosts();
 
     const handleDelete = async (postId) => {
         setLoading(true);
@@ -35,15 +38,13 @@ export default function DeletePost({ postId, getPosts }) {
                 description: "Post deleted...",
                 type: "info"
             })
-            await getPosts();
+            await fetchAllPosts();
+            await fetchMyPosts(user?.id);
             setOpen(false)
         }
 
         setTimeout(() => {
             setLoading(false)
-
-
-
         }, delay)
 
     }
