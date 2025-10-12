@@ -56,6 +56,3 @@ src/
 
 ##  Live Demo
 Check out the live app here: [susu-blog.vercel.app](https://susu-blog.vercel.app/)
-
-## Future Development
-- Implement context management to avoid unnecessary refetches on the `my posts` and `home` page.
