@@ -107,19 +107,21 @@ export default function MobileNav() {
                         Create
                     </Button>
 
-                    <Button
-                        title="Click to log out"
-                        backgroundColor="transparent"
-                        color={colorMode === "light" ? "buttonActiveText" : "buttonText"}
-                        padding={0}
-                        onClick={() => logout()}
-                        _hover={{ 
-                            color: "buttonActiveText",
-                            backgroundColor: "buttonBg", 
-                        }}
-                    >
-                        <HiPower />
-                    </Button>
+                    {user ?
+                        <Button
+                            title="Click to log out"
+                            backgroundColor="transparent"
+                            color={colorMode === "light" ? "buttonActiveText" : "buttonText"}
+                            padding={0}
+                            onClick={() => logout()}
+                            _hover={{ 
+                                color: "buttonActiveText",
+                                backgroundColor: "buttonBg", 
+                            }}
+                        >
+                            <HiPower />
+                        </Button> : ''
+                    }
                 </Flex>
         </Box>
     )
