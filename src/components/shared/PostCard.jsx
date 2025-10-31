@@ -125,7 +125,7 @@ export default function PostCard({
                                 letterSpacing="-.01em"
                                 width="100%"
                             >
-                                {author.name || "Unknown Author"}
+                                {author?.name || "Unknown Author"}
                                 <Text 
                                     as="span" 
                                     display="inline-block" 
