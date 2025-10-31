@@ -5,15 +5,18 @@ import DeletePost from "./DeletePostModal";
 import { useAuth } from "@/providers/AuthProvider";
 
 export default function PostCard({ 
-    id,
-    title,
-    description,
-    img, 
-    date, 
-    content,
-    authorId,
-    authorName,
+    post
 }) {
+    const { 
+        slug, 
+        title,
+        description,
+        author_id, 
+        cover_image, 
+        created_at, 
+        author, 
+        content 
+    } = post;
 
     const navigate = useNavigate();
     const { blocks } = content;
@@ -50,13 +53,13 @@ export default function PostCard({
                     width="100%"
                     borderRadius="sm"
                     aspectRatio="auto"
-                    onClick={() => navigate(`/posts/${id}`)}
+                    onClick={() => navigate(`/posts/${slug}`)}
                 >
-                    {!img ? (
+                    {!cover_image ? (
                         <Skeleton height={252} width="100%" />) :
                         <Image
                             borderRadius="sm"
-                            src={img}
+                            src={cover_image}
                             width="100%"
                             height={252}
                             objectFit="fill"
@@ -83,7 +86,7 @@ export default function PostCard({
                                 letterSpacing="-.01em"
                                 width="100%"
                             >
-                                {authorName || "Unknown Author"}
+                                {author.name || "Unknown Author"}
                                 <Text 
                                     as="span" 
                                     display="inline-block" 
@@ -91,7 +94,7 @@ export default function PostCard({
                                 >
                                     ·
                                 </Text>
-                                {date}
+                                {new Date(created_at).toLocaleDateString()}
                             </Text>
                             <LinkBox onClick={() => navigate(`/posts/${id}`)}>
                                 <Icon
@@ -119,7 +122,7 @@ export default function PostCard({
                         >
                             {description}
                         </Text>
-                        {user?.id === authorId && 
+                        {user.id === author.id && 
                             <DeletePost postId={id} />
                         }
                     </Flex>

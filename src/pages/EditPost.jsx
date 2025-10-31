@@ -6,9 +6,9 @@ import { Box } from "@chakra-ui/react";
 import { useParams } from "react-router";
 
 export default function EditPost() {
-    const { id } = useParams();
-    const { postDetails, loading, error } = usePosts(id);
-    const post = postDetails[id];
+    const { slug } = useParams();
+    const { postDetails, loading, error } = usePosts(slug);
+    const post = postDetails[slug];
 
     if (loading) return <Loader />
 

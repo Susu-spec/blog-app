@@ -19,16 +19,6 @@ export default function PostList({ posts }) {
             gridAutoFlow={{ lg: "repeat(auto-fit, minmax(min-width, 1fr))" }}
         >
             {posts?.map((post, index) => {
-                const { 
-                    id, 
-                    title,
-                    description,
-                    author_id, 
-                    cover_image, 
-                    created_at, 
-                    author, 
-                    content 
-                } = post;
 
                 // Skip if this post was already rendered as the second item in a pair
                 if (index % 2 === 1) {
@@ -40,18 +30,11 @@ export default function PostList({ posts }) {
                 const isLastOddPost = !nextPost;
 
                 return (
-                    <React.Fragment key={id}>
+                    <React.Fragment key={post.id}>
                         {/* First post */}
                         <GridItem>
                             <PostCard
-                                id={id}
-                                title={title}
-                                description={description}
-                                img={cover_image}
-                                date={new Date(created_at).toLocaleDateString()}
-                                authorName={author?.name}
-                                authorId={author_id}
-                                content={content}
+                                post={post}
                             />
                         </GridItem>
 
@@ -78,14 +61,7 @@ export default function PostList({ posts }) {
                         <GridItem>
                             {nextPost ? (
                                 <PostCard
-                                    id={nextPost.id}
-                                    title={nextPost.title}
-                                    description={nextPost.description}
-                                    img={nextPost.cover_image}
-                                    date={new Date(nextPost.created_at).toLocaleDateString()}
-                                    authorName={nextPost.author?.name}
-                                    authorId={nextPost.author_id}
-                                    content={nextPost.content}
+                                    post={nextPost}
                                 />
                             ) : (
                                 // Empty space for odd number of posts

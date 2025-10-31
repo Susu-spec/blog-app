@@ -8,7 +8,7 @@ import { createContext, useCallback, useContext, useState } from "react";
 
 /**
  * @typedef {Object} Post
- * @property {string} id - Unique identifier for the post.
+ * @property {string} slug - URL safe version of the title of the post.
  * @property {string} title - Title of the post.
  * @property {string} content - Main content body of the post.
  * @property {string} author_id - Foreign key for the author.
@@ -22,11 +22,11 @@ import { createContext, useCallback, useContext, useState } from "react";
  * @typedef {Object} PostsContextType
  * @property {Post[]} allPosts - Cached list of all posts.
  * @property {Post[]} myPosts - Cached list of posts created by the current user.
- * @property {Record<string, Post>} postDetails - Cached post details by post ID.
+ * @property {Record<string, Post>} postDetails - Cached post details by post slug.
  * @property {boolean} loading - Indicates whether a request is in progress.
  * @property {() => Promise<Post[]>} fetchAllPosts - Fetch all posts from Supabase.
  * @property {(userId: string) => Promise<Post[]>} fetchMyPosts - Fetch user-specific posts.
- * @property {(postId: string) => Promise<Post>} fetchPost - Fetch individual post by ID.
+ * @property {(postSlug: string) => Promise<Post>} fetchPost - Fetch individual post by its slug.
  * @property {() => void} invalidateCache - Clears all cached post data.
 */
 
@@ -130,17 +130,17 @@ export function PostsProvider({ children }) {
 
     
   /**
-   * Fetch an individual post by ID.
+   * Fetch an individual post by its slug.
    * Uses cache if post details already exist.
    *
-   * @param {string} postId - ID of the post to fetch.
+   * @param {string} postSlug - URL safe version of the title of the post to fetch.
    * @returns {Promise<Post>}
   */
-  const fetchPost = useCallback(async (postId) => {
-      if (!postId) return;
+  const fetchPost = useCallback(async (postSlug) => {
+      if (!postSlug) return;
 
-      if (postDetails[postId]) {
-        return postDetails[postId];
+      if (postDetails[postSlug]) {
+        return postDetails[postSlug];
       }
 
       setLoading(true);
@@ -152,7 +152,7 @@ export function PostsProvider({ children }) {
             *,
             author:author_id(name)
         `)
-        .eq('id', postId)
+        .eq('slug', postSlug)
         .single();
 
       const elapsed = Date.now() - start;
@@ -161,7 +161,7 @@ export function PostsProvider({ children }) {
       if (error) {
           console.error(error);
       } else {
-          setPostDetails(prev => ({ ...prev, [postId]: data }));
+          setPostDetails(prev => ({ ...prev, [postSlug]: data }));
       }
 
       setTimeout(() => {
