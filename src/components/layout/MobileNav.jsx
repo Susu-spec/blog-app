@@ -5,6 +5,7 @@ import { HiLockOpen, HiPower } from "react-icons/hi2";
 import { useColorMode } from "../ui/color-mode";
 import Loader from "../shared/Loader";
 import { useAuth } from "@/providers/AuthProvider";
+import { toaster } from "../ui/toaster";
 
 export default function MobileNav() {
     const navigate = useNavigate();
@@ -14,6 +15,22 @@ export default function MobileNav() {
 
 
     const isActive = (path) => location.pathname === path;
+
+    const handleLogout = async() => {
+        try {
+            logout();
+            toaster.create({
+                description: "You have been logged out successfully",
+                type: "info"
+            })
+        } catch(error) {
+            console.error("Failed to log out", error)
+            toaster.create({
+                description: "Logout failed. Please try again.",
+                type: "error"
+            })
+        }
+    }
 
     if (loading) return <Loader />
 
@@ -113,7 +130,7 @@ export default function MobileNav() {
                             backgroundColor="transparent"
                             color={colorMode === "light" ? "buttonActiveText" : "buttonText"}
                             padding={0}
-                            onClick={() => logout()}
+                            onClick={() => handleLogout()}
                             _hover={{ 
                                 color: "buttonActiveText",
                                 backgroundColor: "buttonBg", 

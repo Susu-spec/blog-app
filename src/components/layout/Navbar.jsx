@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router';
 import { Flex, Box, Heading, Button, Container, chakra } from '@chakra-ui/react';
 import Loader from '../shared/Loader';
 import { useAuth } from '@/providers/AuthProvider';
+import { toaster } from '../ui/toaster';
 
 
 const Navbar = () => {
@@ -11,6 +12,22 @@ const Navbar = () => {
   const { user, loading, logout } = useAuth();
 
   const isActive = (path) => location.pathname === path;
+
+  const handleLogout = async() => {
+    try {
+        logout();
+        toaster.create({
+            description: "You have been logged out successfully",
+            type: "info"
+        })
+    } catch(error) {
+        console.error("Failed to log out", error)
+        toaster.create({
+            description: "Logout failed. Please try again.",
+            type: "error"
+        })
+    }
+}
 
   if (loading) return <Loader />
 
@@ -119,7 +136,7 @@ const Navbar = () => {
                 padding={"0 .75rem"}
                 color="buttonText"
                 borderRadius=".5rem"
-                onClick={() => logout()}
+                onClick={() => handleLogout()}
                 backgroundColor="transparent"
                 _hover={{ 
                   color: "buttonActiveText",
