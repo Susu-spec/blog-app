@@ -1,3 +1,11 @@
+/**
+ * Maps numeric heading levels to their corresponding HTML heading tags.
+ *
+ * @type {Object<number, string>}
+ * @example
+ * levelMap[1] // 'h1'
+ * levelMap[3] // 'h3'
+ */
 export const levelMap = {
   1: "h1",
   2: "h2",
@@ -7,6 +15,14 @@ export const levelMap = {
   6: "h6",
 };
 
+/**
+ * Maps numeric heading levels to Tailwind CSS font size classes.
+ *
+ * @type {Object<number, string>}
+ * @example
+ * levelFontSize[1] // '3xl'
+ * levelFontSize[4] // 'lg'
+ */
 export const levelFontSize = {
   1: "3xl",
   2: "2xl",
@@ -14,4 +30,4 @@ export const levelFontSize = {
   4: "lg",
   5: "md",
   6: "base",
-}
+};
