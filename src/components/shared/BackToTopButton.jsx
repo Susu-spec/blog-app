@@ -2,6 +2,21 @@ import { useEffect, useState } from "react";
 import { IconButton } from "@chakra-ui/react";
 import { HiArrowUp } from "react-icons/hi2";
 
+
+/**
+ * A floating button that appears after scrolling down the page,
+ * allowing users to smoothly return to the top.
+ *
+ * This component listens to the window's scroll position and toggles
+ * visibility once the user scrolls beyond 300px vertically.
+ *
+ * @component
+ * @example
+ * return (
+ *   <BackToTopButton />
+ * )
+ */
+
 export default function BackToTopButton() {
   const [isVisible, setIsVisible] = useState(false);
 

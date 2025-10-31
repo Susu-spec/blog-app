@@ -6,6 +6,29 @@ import { HiArrowRight, HiMagnifyingGlass } from "react-icons/hi2";
 import { Link } from "react-router";
 import Loader from "./Loader";
 
+/**
+ * SearchModal component — provides a searchable modal interface
+ * for filtering and viewing posts.
+ *
+ * Includes a debounced input handler that waits 300ms after the user stops typing
+ * before updating the search query.
+ *
+ * @component
+ * @example
+ * const posts = [
+ *   { id: "1", title: "Hello World", slug: "hello-world" },
+ *   { id: "2", title: "React Tips", slug: "react-tips" },
+ * ];
+ * return <SearchModal posts={posts} loading={false} />;
+ *
+ * @param {Object} props
+ * @param {Array<{ id: string, title: string, slug: string, description?: string }>} [props.posts=[]]
+ *   Array of posts to search from.
+ * @param {boolean} props.loading - Indicates whether post data is still being fetched.
+ *
+ * @returns {JSX.Element} A modal with a search input and filtered post results.
+ */
+
 export default function SearchModal({ posts=[], loading }) {
     const [query, setQuery] = useState("");
 

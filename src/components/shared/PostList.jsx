@@ -3,6 +3,34 @@ import PostCard from "./PostCard";
 import React from "react";
 import { supabase } from "@/lib/supabase";
 
+/**
+ * PostList component — displays a grid of blog post previews.
+ *
+ * Renders a responsive grid of `PostCard` components for each post.
+ * If the posts array is empty, displays a fallback message.
+ *
+ * @component
+ * @example
+ * const posts = [
+ *   { id: "1", slug: "intro", title: "Intro to My Blog", description: "First post", author: { name: "Susu" } },
+ *   { id: "2", slug: "next", title: "Next Steps", description: "Second post", author: { name: "Susu" } }
+ * ];
+ * return <PostList posts={posts} />;
+ *
+ * @param {Object} props
+ * @param {Array<{
+ *   id: string,
+ *   slug: string,
+ *   title: string,
+ *   description?: string,
+ *   author?: { name: string },
+ *   cover_image?: string,
+ *   created_at?: string
+ * }>} props.posts - Array of post objects to render.
+ *
+ * @returns {JSX.Element} A grid of post cards or an empty-state message.
+ */
+
 export default function PostList({ posts }) {
     if (posts?.length === 0) {
         return <p className="italic">No posts available.</p>

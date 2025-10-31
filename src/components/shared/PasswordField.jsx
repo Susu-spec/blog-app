@@ -1,6 +1,22 @@
 import { useState } from "react";
-import { Button, Input } from "@chakra-ui/react";
+import { Input, Button } from "@chakra-ui/react";
 import { LuEye, LuEyeOff } from "react-icons/lu";
+
+/**
+ * PasswordField component — a styled input field with a toggle for password visibility.
+ *
+ * Accepts all Chakra `<Input>` props and adds an eye icon button
+ * that switches between visible and hidden password states.
+ *
+ * @component
+ * @example
+ * return (
+ *   <form>
+ *     <PasswordField placeholder="Enter your password" />
+ *   </form>
+ * )
+ *
+ */
 
 export default function PasswordField({ ...props }) {
   const [show, setShow] = useState(false);
@@ -14,6 +30,7 @@ export default function PasswordField({ ...props }) {
         borderRadius="md"
         height="100%"
       />
+
       <Button
         type="button"
         variant="ghost"
@@ -24,6 +41,7 @@ export default function PasswordField({ ...props }) {
         height="fit"
         className="hover:bg-transparent"
         onClick={() => setShow((prev) => !prev)}
+        aria-label={show ? "Hide password" : "Show password"}
       >
         {show ? (
           <LuEyeOff className="h-4 w-4 text-gray-500" />
@@ -34,4 +52,3 @@ export default function PasswordField({ ...props }) {
     </div>
   );
 }
-

@@ -2,6 +2,24 @@ import { levelFontSize, levelMap } from "@/lib/helper";
 import { Heading, Text } from "@chakra-ui/react";
 import React from "react";
 
+/**
+ * Renders an array of text fragments with inline style information.
+ *
+ * Each content fragment supports basic text formatting such as:
+ * bold, italic, underline, and custom color.
+ *
+ * @param {Array<{ text: string, styles?: { bold?: boolean, italic?: boolean, underline?: boolean, color?: string } }>} content
+ *   Array of text fragments to render.
+ * @returns {JSX.Element[] | undefined} An array of styled <span> elements, or undefined if no content.
+ *
+ * @example
+ * const content = [
+ *   { text: "Hello", styles: { bold: true } },
+ *   { text: " world", styles: { color: "teal" } },
+ * ];
+ * renderContent(content);
+ */
+
 const renderContent = (content) =>
   content?.map((c, idx) => {
     const style = {}
@@ -18,6 +36,26 @@ const renderContent = (content) =>
     );
   });
 
+  
+/**
+ * Renders structured content blocks (e.g., paragraphs, headings, lists).
+ *
+ * Each block object may contain a type (e.g. "paragraph", "heading"),
+ * and a `content` array compatible with `renderContent()`.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Array<{ type: string, content: ReturnType<typeof renderContent> }>} props.blocks
+ *   Array of block objects to render.
+ * @returns {JSX.Element[]} Rendered block elements.
+ *
+ * @example
+ * const blocks = [
+ *   { type: "heading", content: [{ text: "Hello", styles: { bold: true } }] },
+ *   { type: "paragraph", content: [{ text: "This is an example." }] }
+ * ];
+ * <BlockRenderer blocks={blocks} />;
+ */
 
 const BlockRenderer = ({ blocks }) => {
   let parsedBlocks = [];

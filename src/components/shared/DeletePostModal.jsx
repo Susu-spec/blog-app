@@ -7,12 +7,37 @@ import { HiTrash } from "react-icons/hi2";
 import { useAuth } from "@/providers/AuthProvider";
 import { usePosts } from "@/providers/PostsProvider";
 
+/**
+ * DeletePost component — handles post deletion with confirmation dialog.
+ *
+ * Displays a "Delete" button which, when clicked, opens a confirmation modal.
+ * If confirmed, it triggers deletion of the specified post and refreshes post lists.
+ *
+ * @component
+ * @example
+ * return (
+ *   <DeletePost postId={post.id} />
+ * )
+ *
+ * @param {Object} props
+ * @param {string} props.postId - The ID of the post to be deleted.
+ * @returns {JSX.Element} A button with a confirmation dialog for post deletion.
+ */
+
 export default function DeletePost({ postId }) {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const { user } = useAuth();
     const { fetchAllPosts, fetchMyPosts } = usePosts();
 
+    /**
+     * Deletes the post by ID and refreshes post lists.
+     * Displays a loading state during deletion.
+     *
+     * @async
+     * @param {string} postId - The ID of the post to delete.
+     * @returns {Promise<void>}
+     */
     const handleDelete = async (postId) => {
         setLoading(true);
         const start = new Date();

@@ -26,23 +26,72 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { FormLabel } from "@chakra-ui/form-control";
 import { mixed, object, string } from "yup";
 
-const postFormSchema = object({
-  title: string().min(3, "Title must be at least 3 characters").required("Title is required"),
-  description: string().min(3, "Description must be at least 3 characters").required("Description is required"),
-  content: string().min(10, "Content must be at least 10 characters").required("Content is required"),
+/**
+ * Validation schema for the post creation/edit form.
+ *
+ * Validates:
+ * - `title`: minimum 3 characters
+ * - `description`: minimum 3 characters
+ * - `content`: minimum 10 characters
+ * - `cover_image`: must be an image file
+ *
+ * @type {import('yup').ObjectSchema<{
+ *   title: string,
+ *   description: string,
+ *   content: string,
+ *   cover_image: File
+ * }>}
+ */
+export const postFormSchema = object({
+  title: string()
+    .min(3, "Title must be at least 3 characters")
+    .required("Title is required"),
+  description: string()
+    .min(3, "Description must be at least 3 characters")
+    .required("Description is required"),
+  content: string()
+    .min(10, "Content must be at least 10 characters")
+    .required("Content is required"),
   cover_image: mixed()
     .required("Cover image URL is required")
     .test("fileType", "Only image files are allowed", (value) => {
       return !value || (value && value?.type?.startsWith("image/"));
     }),
-})
+});
+
+/**
+ * PostForm component — handles creating and editing blog posts.
+ *
+ * Integrates form validation, image upload, and content editing using BlockNote.
+ * The same component is used for both "create" and "edit" flows, depending on
+ * whether a `post` prop is provided.
+ *
+ * @component
+ * @example
+ * return (
+ *   <PostForm post={existingPost} />
+ * )
+ *
+ * @param {Object} props
+ * @param {{
+ *   id?: string,
+ *   title?: string,
+ *   description?: string,
+ *   content?: string,
+ *   cover_image?: string | File
+ * }} [props.post] - The post to edit; if not provided, a new post is created.
+ *
+ * @returns {JSX.Element} The post form UI.
+ */
+
 
 export default function PostForm({ post }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [fileUploading, setFileUploading] = useState(false);
+  const editor = useBlockNote();
 
-
+  /** @type {{ id: string, title: string, description: string, cover_image: string | File, content: string }} */
   const initialValues = {
     id: post?.id || "",
     title: post?.title || "",

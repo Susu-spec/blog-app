@@ -4,10 +4,49 @@ import { useNavigate } from "react-router";
 import DeletePost from "./DeletePostModal";
 import { useAuth } from "@/providers/AuthProvider";
 
+/**
+ * PostCard component — displays a summary of a blog post with title, cover image,
+ * and description. Clicking the card navigates to the full post.
+ *
+ * @component
+ * @example
+ * return (
+ *   <PostCard
+ *     post={{
+ *       id: '1',
+ *       slug: 'my-first-post',
+ *       title: 'My First Post',
+ *       description: 'An introduction to my journey.',
+ *       author_id: '123',
+ *       cover_image: '/cover.jpg',
+ *       created_at: '2025-10-31T12:00:00Z',
+ *       author: { name: 'Susu' },
+ *       content: { blocks: [...] }
+ *     }}
+ *   />
+ * )
+ *
+ * @param {Object} props
+ * @param {{
+ *   id: string,
+ *   slug: string,
+ *   title: string,
+ *   description?: string,
+ *   author_id: string,
+ *   cover_image?: string,
+ *   created_at: string,
+ *   author?: { name: string },
+ *   content?: { blocks: Array<Object> }
+ * }} props.post - The post data object to display.
+ *
+ * @returns {JSX.Element} A clickable card displaying post information.
+ */
+
 export default function PostCard({ 
     post
 }) {
     const { 
+        id,
         slug, 
         title,
         description,
