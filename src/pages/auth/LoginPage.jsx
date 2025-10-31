@@ -7,6 +7,19 @@ import { Link, useNavigate } from "react-router";
 import { supabase } from "@/lib/supabase";
 import PasswordField from "@/components/shared/PasswordField";
 
+/**
+ * LoginPage — provides a form for users to sign into their account.
+ *
+ * Validates user credentials using a Yup schema and performs authentication. 
+ * On success, redirects the user to the home page.
+ *
+ * @page
+ * @route /login
+ *
+ *
+ * @returns {JSX.Element} The login form page component.
+ */
+
 export default function LoginPage() {
     const navigate = useNavigate();
     const [authError, setAuthError] = useState("");

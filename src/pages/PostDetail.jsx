@@ -12,6 +12,18 @@ import { HiPencil } from "react-icons/hi2";
 import { LuPencil } from "react-icons/lu";
 import { useNavigate, useParams } from "react-router";
 
+/**
+ * PostDetailsPage — displays a single blog post based on its slug.
+ *
+ * Fetches post data from Supabase using the `usePosts()` hook and
+ * renders it with the `PostDetails` component.
+ *
+ * @page
+ * @route /posts/:slug
+ *
+ * @returns {JSX.Element} The blog post details page.
+ */
+
 export default function PostDetail() {
     const { slug } = useParams();
     const { postDetails, loading, error, fetchPost } = usePosts();

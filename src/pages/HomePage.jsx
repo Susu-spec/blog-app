@@ -6,6 +6,19 @@ import { usePosts } from "@/providers/PostsProvider";
 import { Box, Flex, Heading } from "@chakra-ui/react";
 import { useEffect } from "react";
 
+/**
+ * HomePage — displays a list of all published blog posts.
+ *
+ * This is the main landing page of the application.
+ * Fetches posts via the `usePosts()` hook and renders them
+ * using the `PostList` component.
+ *
+ * @page
+ * @route /
+ *
+ * @returns {JSX.Element} The home page displaying a list of posts.
+ */
+
 export default function HomePage() {
     const { allPosts, loading, fetchAllPosts } = usePosts();
 

@@ -9,6 +9,19 @@ import { LuEye, LuEyeOff } from "react-icons/lu";
 import { useNavigate } from "react-router";
 import * as Yup from "yup";
 
+/**
+ * SignupPage — allows new users to create an account.
+ *
+ * Uses a Yup validation schema to validate user input and communicates
+ * with Supabase to register the user.
+ * On successful signup, it redirects to the login page.
+ *
+ * @page
+ * @route /signup
+ *
+ * @returns {JSX.Element} The signup page component with registration form.
+ */
+
 export default function SignupPage() {
     const navigate = useNavigate();
     const [authError, setAuthError] = useState("");

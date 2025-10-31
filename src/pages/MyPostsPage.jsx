@@ -7,6 +7,20 @@ import { usePosts } from "@/providers/PostsProvider";
 import { Box, Flex, Heading } from "@chakra-ui/react";
 import { useEffect } from "react";
 
+/**
+ * MyPostsPage — displays a list of all published blog posts belonging to the current user.
+ *
+ * Fetches posts via the `usePosts()` hook passed the current's user `id` and renders them
+ * using the `PostList` component.
+ *
+ * @page
+ * @route /my-posts
+ * @protected true
+ *
+ * @returns {JSX.Element} The `my-posts` page displaying a list of posts.
+ */
+
+
 export default function MyPostsPage() {
     const { user, error } = useAuth();
     const { myPosts, loading, fetchMyPosts } = usePosts(user?.id);
