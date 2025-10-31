@@ -116,47 +116,43 @@ export default function SearchModal({ posts=[], loading }) {
                                     animate={{ height: "auto", opacity: 1 }}
                                     exit={{ height: 0, opacity: 0 }}
                                     transition={{ duration: 0.3, ease: "easeInOut" }}
+                                    paddingTop={4}
+                                    paddingBottom={2}
                                 >
-                                    <Box
-                                        paddingTop={4}
-                                        paddingBottom={2}
-                                    >
-                                        {filtered.length === 0 ? (
-                                            <Text 
-                                                paddingBlock={5}
-                                                textAlign="center"
-                                                color="buttonText"
-                                            >
-                                                No results found.
-                                            </Text>
-                                        )
-                                            : (
-                                                filtered?.map((item, index) => (
-                                                    <Link to={`/posts/${item?.slug}`}>
-                                                        <Flex
-                                                            key={item?.id} 
-                                                            padding={".75rem 1.125rem"} 
-                                                            cursor="pointer" 
-                                                            alignItems="center"
-                                                            gap={3}
-                                                            _hover={{ backgroundColor: "linkHoverBg" }}
+                                    {filtered.length === 0 ? (
+                                        <Text 
+                                            paddingBlock={5}
+                                            textAlign="center"
+                                            color="buttonText"
+                                        >
+                                            No results found.
+                                        </Text>
+                                    )
+                                        : (
+                                            filtered?.map((item) => (
+                                                <Link to={`/posts/${item?.slug}`} key={item?.id}>
+                                                    <Flex
+                                                        padding={".75rem 1.125rem"} 
+                                                        cursor="pointer" 
+                                                        alignItems="center"
+                                                        gap={3}
+                                                        _hover={{ backgroundColor: "linkHoverBg" }}
+                                                    >
+                                                        <HiArrowRight
+                                                            width="14px" 
+                                                            height="14px" 
+                                                            _hover={{ color: "bodyText" }}
+                                                        />
+                                                        <Text 
+                                                            _hover={{ color: "bodyText" }} 
                                                         >
-                                                            <HiArrowRight
-                                                                width="14px" 
-                                                                height="14px" 
-                                                                _hover={{ color: "bodyText" }}
-                                                            />
-                                                            <Text 
-                                                                _hover={{ color: "bodyText" }} 
-                                                            >
-                                                                {item.title}
-                                                            </Text>
-                                                        </Flex>
-                                                    </Link>
-                                                ))
-                                            )
-                                        }
-                                    </Box>
+                                                            {item.title}
+                                                        </Text>
+                                                    </Flex>
+                                                </Link>
+                                            ))
+                                        )
+                                    }
                                 </MotionBox>
                             </>
                         </Dialog.Body>

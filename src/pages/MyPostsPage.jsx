@@ -34,19 +34,17 @@ export default function MyPostsPage() {
     if (loading) return <Loader />
 
     return (
-        <PageWrapper>
-            <Box>
-                <Heading as="h1" size="4xl">
-                    All Your Posts
-                </Heading>
-                <Box
-                    paddingTop={6}
-                    paddingBottom={12}
-                >
-                    <SearchModal posts={myPosts} loading={loading} />
-                </Box>
-                <PostList posts={myPosts} />
+        <Box>
+            <Heading as="h1" size="4xl">
+                All Your Posts
+            </Heading>
+            <Box
+                paddingTop={6}
+                paddingBottom={12}
+            >
+                <SearchModal posts={myPosts} loading={loading} />
             </Box>
-        </PageWrapper>
+            <PostList posts={myPosts} />
+        </Box>
     )
 }

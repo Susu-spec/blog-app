@@ -30,19 +30,17 @@ export default function HomePage() {
     if (loading) return <Loader />
 
     return (
-        <PageWrapper>
-            <Box>
-                <Heading as="h1" size="4xl">
-                    Now
-                </Heading>
-                <Box
-                    paddingTop={6}
-                    paddingBottom={12}
-                >
-                    <SearchModal posts={allPosts} loading={loading}/>
-                </Box>
-                <PostList posts={allPosts} />
+        <Box>
+            <Heading as="h1" size="4xl">
+                Now
+            </Heading>
+            <Box
+                paddingTop={6}
+                paddingBottom={12}
+            >
+                <SearchModal posts={allPosts} loading={loading}/>
             </Box>
-        </PageWrapper>
+            <PostList posts={allPosts} />
+        </Box>
     )
 }

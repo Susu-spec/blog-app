@@ -7,6 +7,7 @@ import { supabase } from "./lib/supabase"
 import { AuthProvider } from "./providers/AuthProvider"
 import { PostsProvider } from "./providers/PostsProvider"
 import { HelmetProvider } from "@dr.pogodin/react-helmet"
+import PageWrapper from "./components/layout/PageWrapper"
 
 function App() {
 
@@ -15,10 +16,8 @@ function App() {
       <AuthProvider>
         <HelmetProvider>
           <PostsProvider>
-            <AnimatePresence>
               <RouterProvider router={routes} />
               <Toaster />
-            </AnimatePresence>
           </PostsProvider>
         </HelmetProvider>
       </AuthProvider>

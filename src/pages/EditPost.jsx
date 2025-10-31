@@ -28,10 +28,8 @@ export default function EditPost() {
   if (loading) return <Loader />;
 
   return (
-    <PageWrapper>
       <Box>
         <PostForm post={post} />
       </Box>
-    </PageWrapper>
   );
 }

@@ -14,11 +14,11 @@ export const routes = createBrowserRouter([
     { path: "*", element: <div>404 Not Found.</div> },
     { 
         path: "/login", 
-        element: <PageWrapper><LoginPage /></PageWrapper>
+        element: <PageWrapper key="login"><LoginPage /></PageWrapper>
     },
     {
         path: "/signup",
-        element: <PageWrapper><SignupPage /></PageWrapper>
+        element: <PageWrapper key="signup"><SignupPage /></PageWrapper>
     },
     {
         path: "/", 
@@ -52,9 +52,7 @@ export const routes = createBrowserRouter([
                 path: "post/create",
                 element: (
                     <ProtectedRoute>
-                        <PageWrapper>
-                            <CreatePost />
-                        </PageWrapper>
+                        <CreatePost />
                     </ProtectedRoute>
                 )
             }
