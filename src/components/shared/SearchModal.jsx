@@ -132,9 +132,9 @@ export default function SearchModal({ posts=[], loading }) {
                                         )
                                             : (
                                                 filtered?.map((item, index) => (
-                                                    <Link to={`/posts/${item?.id}`}>
+                                                    <Link to={`/posts/${item?.slug}`}>
                                                         <Flex
-                                                            key={index} 
+                                                            key={item?.id} 
                                                             padding={".75rem 1.125rem"} 
                                                             cursor="pointer" 
                                                             alignItems="center"
