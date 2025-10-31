@@ -161,7 +161,7 @@ export default function PostCard({
                         >
                             {description}
                         </Text>
-                        {user.id === author.id && 
+                        {user.id === author?.id && 
                             <DeletePost postId={id} />
                         }
                     </Flex>

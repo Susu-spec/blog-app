@@ -58,7 +58,7 @@ export default function PostList({ posts }) {
                 const isLastOddPost = !nextPost;
 
                 return (
-                    <React.Fragment key={post.id}>
+                    <React.Fragment key={post?.id}>
                         {/* First post */}
                         <GridItem>
                             <PostCard
