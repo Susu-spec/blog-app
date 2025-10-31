@@ -1,7 +1,40 @@
+/**
+ * @fileoverview Authentication provider that manages user session, loading state, and error handling.
+ * Exposes user information and auth utilities to the rest of the application.
+ */
+
 import { supabase } from "@/lib/supabase";
 import { createContext, useContext, useEffect, useState } from "react";
 
+/**
+ * @typedef {Object} User
+ * @property {string} id - Unique identifier for the user.
+ * @property {string} name - Name of the user.
+ * @property {string} created_at - Timestamp of when the user was created.
+ */
+
+/**
+ * @typedef {Object} AuthContextType
+ * @property {User | null} user - Current user logged into the application.
+ * @property {boolean} loading - Indicates whether a request is in progress.
+ * @property {Error | null} error - Any error that occurred during authentication.
+ * @property {() => Promise<void>} logout - Logs the user out of their session.
+ */
+
+/**
+ * React Context that stores authentication state and methods.
+ * @type {React.Context<AuthContextType | undefined>}
+ */
 const AuthContext = createContext();
+
+
+/**
+ * Provides authentication context to all child components.
+ * Manages user session persistence, listens for auth changes, and handles logout.
+ *
+ * @param {{ children: React.ReactNode }} props - The child components wrapped by the provider.
+ * @returns {JSX.Element}
+ */
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
@@ -9,6 +42,10 @@ export function AuthProvider({ children }) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        /**
+         * Fetches the currently logged-in user from Supabase.
+         * Called on initial mount to restore session if it exists.
+         */
         async function fetchUser() {
             const { data, error } = await supabase.auth.getUser();
             
@@ -33,6 +70,11 @@ export function AuthProvider({ children }) {
         return () => subscription.unsubscribe();
     }, []);
 
+
+    /**
+     * Logs out the current user and resets user state.
+     * @returns {Promise<void>}
+     */
     const logout = async () => {
         setLoading(true);
         const { error } = await supabase.auth.signOut();
@@ -52,6 +94,15 @@ export function AuthProvider({ children }) {
         </AuthContext.Provider>
     );
 }
+
+
+/**
+ * Custom React hook to access authentication state and actions.
+ * Must be used within an `<AuthProvider>`.
+ *
+ * @throws {Error} If called outside of an AuthProvider.
+ * @returns {AuthContextType} The authentication context object.
+ */
 
 export function useAuth() {
     const context = useContext(AuthContext);

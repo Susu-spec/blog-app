@@ -32,10 +32,8 @@ export default function PostDetail() {
         updated_at,
         content,
         author,
-        author_id
     } = post || {};
 
-    const author_name = author?.name;
     const blocks = content || [];
 
     const handleCopy = async () => {
@@ -93,7 +91,6 @@ export default function PostDetail() {
                         >
                             {!cover_image ?
                                 <Skeleton width="100%" height={440} /> :
-                                // Test fill for larger screens
                                 <Image 
                                     src={cover_image}
                                     borderRadius="sm"
@@ -104,7 +101,7 @@ export default function PostDetail() {
                             }
                         </Box>
                         <Flex color="linkText" alignItems="center" justifyContent="center">
-                            <Text as="span">{author_name || "Unknown Author"}</Text>
+                            <Text as="span">{author?.name || "Unknown Author"}</Text>
                             <Text as="span" marginInline=".625rem">·</Text>
                             <Text as="time">{new Date(created_at).toLocaleDateString()}</Text>
                             <Text as="span" marginInline=".625rem">·</Text>
@@ -114,7 +111,7 @@ export default function PostDetail() {
                                         Copy Text
                                 </button>
                                 <Text as="span" marginInline=".625rem">·</Text>
-                                {user?.id === author_id ?
+                                {user.id === author.id ?
                                     <button 
                                         onClick={() => navigate(`/posts/${id}/edit`)} 
                                         className="cursor-pointer flex gap-1.5 items-center"
