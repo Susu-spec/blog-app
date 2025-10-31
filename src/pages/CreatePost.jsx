@@ -1,7 +1,5 @@
 import PostForm from "@/components/shared/PostForm";
 
-import PostForm from "../components/PostForm";
-
 /**
  * CreatePost page — allows users to create a new blog post.
  *

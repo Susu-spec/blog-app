@@ -89,7 +89,6 @@ export default function PostForm({ post }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [fileUploading, setFileUploading] = useState(false);
-  const editor = useBlockNote();
 
   /** @type {{ id: string, title: string, description: string, cover_image: string | File, content: string }} */
   const initialValues = {

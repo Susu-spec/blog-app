@@ -5,13 +5,6 @@ import { usePosts } from "@/providers/PostsProvider";
 import { Box } from "@chakra-ui/react";
 import { useParams } from "react-router";
 
-import { Box } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
-import { usePosts } from "../hooks/usePosts";
-import PostForm from "../components/PostForm";
-import PageWrapper from "../components/PageWrapper";
-import Loader from "../components/Loader";
-
 /**
  * EditPost page — allows users to edit an existing blog post belonging to them.
  *
