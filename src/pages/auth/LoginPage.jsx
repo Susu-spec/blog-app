@@ -6,6 +6,7 @@ import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/form-contro
 import { Link, useNavigate } from "react-router";
 import { supabase } from "@/lib/supabase";
 import PasswordField from "@/components/shared/PasswordField";
+import { toaster } from "@/components/ui/toaster";
 
 /**
  * LoginPage — provides a form for users to sign into their account.
@@ -49,6 +50,11 @@ export default function LoginPage() {
                 type: "error",
             })
         } else {
+            toaster.create({
+                title: "Welcome",
+                description: "You now have write access",
+                type: "info"
+            })
             navigate("/"); 
         }
         actions.setSubmitting(false);
