@@ -83,3 +83,48 @@ export function parseSignupError(error) {
     description: error.message ?? "Something went wrong. Please try again.",
   };
 }
+
+
+/**
+ * Parses a Supabase login error and returns toaster metadata.
+ *
+ * @param {Error | { message?: string }} [error] - The Supabase error object or network error.
+ * @returns {{ title: string, description: string }} Error message object.
+ */
+
+export function parseLoginError(error) {
+  const message = error?.message?.toLowerCase() || "";
+
+  if (/invalid login credentials|user not found/i.test(message)) {
+    return {
+      title: "Invalid credentials",
+      description: "Email or password is incorrect.",
+    };
+  }
+
+  if (/email not confirmed|confirm your email/i.test(message)) {
+    return {
+      title: "Email not confirmed",
+      description: "Check your inbox and confirm your account before logging in.",
+    };
+  }
+
+  if (/failed to fetch|network error/i.test(message)) {
+    return {
+      title: "Network error",
+      description: "Please check your connection and try again.",
+    };
+  }
+
+  if (/rate limit/i.test(message)) {
+    return {
+      title: "Too many attempts",
+      description: "Please wait a few moments and try again.",
+    };
+  }
+
+  return {
+    title: "Login failed",
+    description: error.message || "Something went wrong. Please try again.",
+  };
+}

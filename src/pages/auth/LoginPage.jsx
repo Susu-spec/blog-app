@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router";
 import { supabase } from "@/lib/supabase";
 import PasswordField from "@/components/shared/PasswordField";
 import { toaster } from "@/components/ui/toaster";
+import { parseLoginError } from "@/lib/helper";
 
 /**
  * LoginPage — provides a form for users to sign into their account.
@@ -43,17 +44,23 @@ export default function LoginPage() {
         });
 
         if (error) {
+            const { title, description } = parseLoginError(error);
             setAuthError(error.message);
+
             toaster.create({
-                title: "Login failed",
-                description: error.message,
+                title,
+                description,
                 type: "error",
+                duration: 4000,
+                isClosable: true
             })
         } else {
             toaster.create({
                 title: "Welcome",
                 description: "You now have write access",
-                type: "info"
+                type: "info",
+                duration: 3000,
+                isClosable: true,
             })
             navigate("/"); 
         }
