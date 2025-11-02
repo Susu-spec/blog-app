@@ -1,12 +1,13 @@
 import PasswordField from "@/components/shared/PasswordField";
 import { toaster } from "@/components/ui/toaster";
+import { parseSignupError } from "@/lib/helper";
 import { supabase } from "@/lib/supabase";
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/form-control";
 import { Box, Button, Input, Spinner } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { useState } from "react";
 import { LuEye, LuEyeOff } from "react-icons/lu";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import * as Yup from "yup";
 
 /**
@@ -32,14 +33,14 @@ export default function SignupPage() {
         name: Yup.string().required("Required"),
         email: Yup.string().email("Invalid email").required("Required"),
         password: Yup.string()
-        .min(6, "Password must be at least 6 characters")
-        .matches(/[a-z]/, "Must contain at least one lowercase letter")
-        .matches(/[A-Z]/, "Must contain at least one uppercase letter")
-        .matches(/[0-9]/, "Must contain at least one number")
-        .required("Required"),
+            .min(6, "Password must be at least 6 characters")
+            .matches(/[a-z]/, "Must contain at least one lowercase letter")
+            .matches(/[A-Z]/, "Must contain at least one uppercase letter")
+            .matches(/[0-9]/, "Must contain at least one number")
+            .required("Required"),
         confirmPassword: Yup.string()
-        .oneOf([Yup.ref("password"), null], "Passwords must match")
-        .required("Required"),
+            .oneOf([Yup.ref("password"), null], "Passwords must match")
+            .required("Required"),
     });
 
     const handleSignup = async (values, actions) => {
@@ -53,19 +54,22 @@ export default function SignupPage() {
             confirmPassword: values.confirmPassword
         });
 
+
         if (error) {
+            const { title, description } = parseSignupError(error);
             setAuthError(error.message);
+
             toaster.create({
-                title: "Signup failed",
-                description: error.message,
+                title,
+                description,
                 type: "error",
-                duration: 3000,
+                duration: 4000,
                 isClosable: true,
             });
         } else {
             toaster.create({
                 title: "Account created!",
-                description: "Check your email to confirm your account.",
+                description: "Your account has been created successfully.",
                 type: "success",
                 duration: 3000,
                 isClosable: true,
@@ -97,6 +101,7 @@ export default function SignupPage() {
                 display="flex"
                 flexDir="column"
                 gap={4}
+                cursor="default"
             >
                 <Formik
                     initialValues={{ name: "", email: "", password: "", confirmPassword: ""}}
@@ -206,6 +211,12 @@ export default function SignupPage() {
                             )
                         }}
                     </Formik>
+                <p className="text-center !text-[.625rem]">
+                    Need to log in? 
+                    <Link to="/login" className="!ml-1 !underline">
+                        Log in
+                    </Link>
+                </p>
             </Box>
         </div>
     )
