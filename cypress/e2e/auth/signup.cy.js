@@ -31,7 +31,7 @@ describe('Sign up Flow', () => {
         cy.intercept('POST', '**/auth/v1/signup', {
             statusCode: 400,
             body: {
-                message: '',
+                message: 'User already registered',
             },
         }).as('signupFail');
 
@@ -58,6 +58,6 @@ describe('Sign up Flow', () => {
 
         cy.wait('@networkFail');
 
-        cy.contains(/signup failed/i).should('be.visible')
+        cy.contains(/failed to fetch/i).should('be.visible')
     })
 })
