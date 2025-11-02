@@ -3,6 +3,8 @@
  * Exposes user information and auth utilities to the rest of the application.
  */
 
+import { toaster } from "@/components/ui/toaster";
+import { parseLogoutError } from "@/lib/helper";
 import { supabase } from "@/lib/supabase";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -47,7 +49,7 @@ export function AuthProvider({ children }) {
          * Called on initial mount to restore session if it exists.
          */
         async function fetchUser() {
-            const { data, error } = await supabase.auth.getUser();
+            const { data, error } = await supabase.auth.getSession();
             
             if (error) {
                 setError(error);
@@ -63,7 +65,7 @@ export function AuthProvider({ children }) {
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             (_event, session) => {
-            setUser(session?.user ?? null);
+                setUser(session?.user ?? null);
             }
         );
 
@@ -81,8 +83,20 @@ export function AuthProvider({ children }) {
 
         if (error) {
             setError(error);
+            const { title, description } = parseLogoutError(error)
+            toaster.create({
+                title,
+                description,
+                type: "error",
+                duration: 4000,
+                isClosable: true,
+            })
         } else {
             setUser(null);
+            toaster.create({
+                description: "You have been logged out successfully",
+                type: "info"
+            })
         }
 
         setLoading(false);

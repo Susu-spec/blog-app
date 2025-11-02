@@ -128,3 +128,42 @@ export function parseLoginError(error) {
     description: error.message || "Something went wrong. Please try again.",
   };
 }
+
+
+
+/**
+ * Parses Supabase logout errors and returns toaster-friendly data.
+ *
+ * @param {Error | { message?: string }} [error]
+ * @returns {{ title: string, description: string }}
+ */
+export function parseLogoutError(error) {
+  const message = error?.message?.toLowerCase() || "";
+
+  if (/failed to fetch|network error/i.test(message)) {
+    return {
+      title: "Network error",
+      description: "We couldn’t connect. Please check your internet and try again.",
+    };
+  }
+
+  if (/session|token|expired/i.test(message)) {
+    return {
+      title: "Session expired",
+      description: "Your session has already ended. Please log in again.",
+    };
+  }
+
+  if (/not authenticated|invalid api key/i.test(message)) {
+    return {
+      title: "Logout failed",
+      description: "Authentication error. Please refresh and try again.",
+    };
+  }
+
+  return {
+    title: "Logout failed",
+    description: error?.message || "Something went wrong. Please try again.",
+  };
+}
+

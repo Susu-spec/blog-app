@@ -6,6 +6,7 @@ import { useColorMode } from "../ui/color-mode";
 import Loader from "../shared/Loader";
 import { useAuth } from "@/providers/AuthProvider";
 import { toaster } from "../ui/toaster";
+import { parseLogoutError } from "@/lib/helper";
 
 export default function MobileNav() {
     const navigate = useNavigate();
@@ -15,22 +16,6 @@ export default function MobileNav() {
 
 
     const isActive = (path) => location.pathname === path;
-
-    const handleLogout = async() => {
-        try {
-            logout();
-            toaster.create({
-                description: "You have been logged out successfully",
-                type: "info"
-            })
-        } catch(error) {
-            console.error("Failed to log out", error)
-            toaster.create({
-                description: "Logout failed. Please try again.",
-                type: "error"
-            })
-        }
-    }
 
     if (loading) return <Loader />
 
@@ -87,23 +72,23 @@ export default function MobileNav() {
                     </Button>
                     {user ?
                         <Button
-                        variant="link"
-                        padding={".75rem 1rem"}
-                        color={isActive('/my-posts') ? "buttonActiveText" : "buttonText"}
-                        borderRadius=".5rem"
-                        onClick={() => navigate('/my-posts')}
-                        backgroundColor={isActive('/my-posts') ? "buttonBg" : "transparent"}
-                        _hover={{ 
-                        color: "buttonActiveText",
-                        backgroundColor: "buttonBg", 
-                        }}
-                        _active={{
-                        color: "buttonActiveText",
-                        backgroundColor: "buttonBg", 
-                        }}
-                    >
+                            variant="link"
+                            padding={".75rem 1rem"}
+                            color={isActive('/my-posts') ? "buttonActiveText" : "buttonText"}
+                            borderRadius=".5rem"
+                            onClick={() => navigate('/my-posts')}
+                            backgroundColor={isActive('/my-posts') ? "buttonBg" : "transparent"}
+                            _hover={{ 
+                                color: "buttonActiveText",
+                                backgroundColor: "buttonBg", 
+                            }}
+                            _active={{
+                                color: "buttonActiveText",
+                                backgroundColor: "buttonBg", 
+                            }}
+                        >
                         Your Posts
-                    </Button> : ''
+                        </Button> : ''
                     }
                     <Button
                         variant="link"
@@ -127,10 +112,11 @@ export default function MobileNav() {
                     {user ?
                         <Button
                             title="Click to log out"
+                            data-cy="logout-button-mobile"
                             backgroundColor="transparent"
                             color={colorMode === "light" ? "buttonActiveText" : "buttonText"}
                             padding={0}
-                            onClick={() => handleLogout()}
+                            onClick={() => logout()}
                             _hover={{ 
                                 color: "buttonActiveText",
                                 backgroundColor: "buttonBg", 
