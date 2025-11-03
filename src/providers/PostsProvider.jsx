@@ -3,6 +3,7 @@
  * Provides utilities to fetch, cache, and invalidate post lists and details.
  */
 
+import { toaster } from "@/components/ui/toaster";
 import { supabase } from "@/lib/supabase";
 import { createContext, useCallback, useContext, useState } from "react";
 
@@ -70,9 +71,30 @@ export function PostsProvider({ children }) {
 
     const elapsed = Date.now() - start;
     const delay = Math.max(0, 800 - elapsed);
+    const parseFetchPostsError = (error) => {
+      const message = error?.message
+      if (/failed to fetch|network error/i.test(message)) {
+        return {
+          title: "Network error",
+          description: "We couldn't connect. Please check your internet connection and try again.",
+        }
+      }
+
+      return {
+        title: "An error occured.",
+        description: "Please reload the page.",
+      }
+    }
 
     if (error) {
-      console.error(error);
+      const { title, description } = parseFetchPostsError(error);
+      toaster.create({
+        title,
+        description,
+        type: "error",
+        duration: 4000,
+        isClosable: true,
+      })
     } else {
       setAllPosts(data || []);
     }

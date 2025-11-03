@@ -76,7 +76,8 @@ export default function PostCard({
                     opacity: 1, 
                     transform: "translateX(2px)" 
                 },
-            }}    
+            }}  
+            data-cy="post-card"  
         >
             <Flex
                 gap={5}

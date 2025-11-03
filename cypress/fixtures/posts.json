@@ -1,0 +1,19 @@
+[
+    {
+      "id": "4e003cfb-5860-471b-8493-430f76aca839",
+      "author_id": "89801362-b99b-4240-80ba-8c90049631d3",
+      "cover_image":
+        "https://wyesjaxdykcofrykjrgp.supabase.co/storage/v1/object/public/post-covers/89801362-b99b-4240-80ba-8c90049631d3/1759745721323.avif",
+      "content":
+        [{"id":"eeda268a-5ff9-4c98-94d8-587e5a48aa53","type":"heading","props":{"textColor":"default","backgroundColor":"default","textAlignment":"left","level":3,"isToggleable":false},"content":[{"type":"text","text":"New Post","styles":{}}],"children":[]},{"id":"2745f916-40e3-4fa5-86e6-c7fa030265ca","type":"paragraph","props":{"textColor":"default","backgroundColor":"default","textAlignment":"left"},"content":[{"type":"text","text":"New post new post","styles":{}}],"children":[]}],
+      "created_at": "2025-10-06T10:15:22.394+00:00",
+      "updated_at": "2025-10-31T16:52:03.055893+00:00",
+      "author_name": "Suwayba",
+      "title": "Title",
+      "description": "Description",
+      "slug": "title",
+      "author": {
+        "name": "Suwayba"
+      }
+    }
+]
