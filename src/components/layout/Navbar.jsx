@@ -58,7 +58,7 @@ const Navbar = () => {
         >
           <NavButton to="/" label="Home" />
           {user ? (
-            <NavButton to="/my-posts" label="Your Posts" />
+            <NavButton  to="/my-posts" label="Your Posts" />
           ) : (
             <NavButton to="/" label="Posts" condition={isActive('/posts')} />
           )}

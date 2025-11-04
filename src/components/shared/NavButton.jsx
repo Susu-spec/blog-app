@@ -39,6 +39,7 @@ export default function NavButton({
     condition = true,
     variant = "link",
     sx,
+    ...props
 }) {
 
     const navigate = useNavigate();
@@ -69,6 +70,7 @@ export default function NavButton({
                 backgroundColor: "buttonBg",
             }}
             {...sx}
+            {...props}
         >
             {label}
         </Button>

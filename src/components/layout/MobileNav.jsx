@@ -56,7 +56,7 @@ export default function MobileNav() {
                 <ToggleThemeButton />
                 <NavButton to="/" label="Home" />
                 {user ? (
-                    <NavButton to="/my-posts" label="Your Posts" />
+                    <NavButton data-cy="my-posts-button" to="/my-posts" label="Your Posts" />
                 ) : (
                     <NavButton to="/" label="Posts" condition={isActive('/posts')} />
                 )}
