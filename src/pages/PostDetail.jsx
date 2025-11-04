@@ -45,6 +45,7 @@ export default function PostDetail() {
         updated_at,
         content,
         author_id,
+        author_name,
         author,
     } = post || {};
 
@@ -130,7 +131,7 @@ export default function PostDetail() {
                             }
                         </Box>
                         <Flex color="linkText" alignItems="center" justifyContent="center">
-                            <Text as="span">{author?.name || "Unknown Author"}</Text>
+                            <Text as="span">{author_name || "Unknown Author"}</Text>
                             <Text as="span" marginInline=".625rem">·</Text>
                             <Text as="time">{new Date(created_at).toLocaleDateString()}</Text>
                             <Text as="span" marginInline=".625rem">·</Text>
@@ -140,11 +141,11 @@ export default function PostDetail() {
                                         Copy Text
                                 </button>
                                 
-                                {user.id === author_id ?
+                                {user && user?.id === author_id ?
                                     <>
                                         <Text as="span" marginInline=".625rem">·</Text>
                                         <button 
-                                            onClick={() => navigate(`/posts/${post?.slug}/edit`)} 
+                                            onClick={() => navigate(`/my-posts/${post?.slug}/edit`)} 
                                             className="cursor-pointer flex gap-1.5 items-center"
                                         >
                                             <span className="hidden md:block">Edit Post</span>

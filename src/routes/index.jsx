@@ -30,10 +30,10 @@ export const routes = createBrowserRouter([
             },
             {
                 path: "my-posts",
-                element: <MyPostsPage />
+                element: <MyPostsPage />,
             },
             {
-                path: "posts/:slug",
+                path: "my-posts/:slug",
                 element: (
                     <ProtectedRoute>
                         <PostDetails />
@@ -41,11 +41,17 @@ export const routes = createBrowserRouter([
                 )
             },
             {
-                path: "posts/:slug/edit",
+                path: "my-posts/:slug/edit",
                 element: (
                     <ProtectedRoute>
                         <EditPost />
                     </ProtectedRoute>
+                )
+            },
+            {
+                path: "posts/:slug",
+                element: (
+                    <PostDetails />
                 )
             },
             {

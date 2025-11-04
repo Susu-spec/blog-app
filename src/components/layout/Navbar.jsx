@@ -5,6 +5,7 @@ import Loader from '../shared/Loader';
 import { useAuth } from '@/providers/AuthProvider';
 import { toaster } from '../ui/toaster';
 import { parseLogoutError } from '@/lib/helper';
+import NavButton from '../shared/NavButton';
 
 
 const Navbar = () => {
@@ -12,7 +13,7 @@ const Navbar = () => {
   const location = useLocation();
   const { user, loading, logout } = useAuth();
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => location.pathname.startsWith(path);
 
   if (loading) return <Loader />
 
@@ -29,6 +30,7 @@ const Navbar = () => {
       zIndex={999}
       width="100%"
       backgroundColor="navBg"
+      transition="all 0.3s ease-in-out"
     >
       <Flex
         maxWidth={1024}
@@ -54,65 +56,13 @@ const Navbar = () => {
             lg: "flex"
           }}
         >
-          <Button
-            variant="link"
-            height="2rem"
-            padding={"0 .75rem"}
-            color={isActive('/') ? "buttonActiveText" : "buttonText"}
-            borderRadius=".5rem"
-            onClick={() => navigate('/')}
-            backgroundColor={isActive('/') ? "buttonBg" : "transparent"}
-            _hover={{ 
-              color: "buttonActiveText",
-              backgroundColor: "buttonBg", 
-            }}
-            _active={{
-              color: "buttonActiveText",
-              backgroundColor: "buttonBg", 
-            }}
-          >
-            Home
-          </Button>
-          {user ?
-             <Button
-              variant="link"
-              height="2rem"
-              padding={"0 .75rem"}
-              color={isActive('/my-posts') ? "buttonActiveText" : "buttonText"}
-              borderRadius=".5rem"
-              onClick={() => navigate('/my-posts')}
-              backgroundColor={isActive('/my-posts') ? "buttonBg" : "transparent"}
-              _hover={{ 
-                color: "buttonActiveText",
-                backgroundColor: "buttonBg", 
-              }}
-              _active={{
-                color: "buttonActiveText",
-                backgroundColor: "buttonBg", 
-              }}
-            >
-              Your Posts
-            </Button> : ''
-          }
-           <Button
-            variant="link"
-            height="2rem"
-            padding={"0 .75rem"}
-            color={isActive('/post/create') ? "buttonActiveText" : "buttonText"}
-            borderRadius=".5rem"
-            onClick={() => navigate('/post/create')}
-            backgroundColor={isActive('/post/create') ? "buttonBg" : "transparent"}
-            _hover={{ 
-              color: "buttonActiveText",
-              backgroundColor: "buttonBg", 
-            }}
-            _active={{
-              color: "buttonActiveText",
-              backgroundColor: "buttonBg", 
-            }}
-          >
-            Start Writing
-          </Button>
+          <NavButton to="/" label="Home" />
+          {user ? (
+            <NavButton to="/my-posts" label="Your Posts" />
+          ) : (
+            <NavButton to="/" label="Posts" condition={isActive('/posts')} />
+          )}
+           <NavButton to="/post/create" label="Start Writing" />
           {user ? 
             <Button
                 variant="link"

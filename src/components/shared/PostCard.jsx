@@ -51,6 +51,7 @@ export default function PostCard({
         title,
         description,
         author_id, 
+        author_name,
         cover_image, 
         created_at, 
         author, 
@@ -63,7 +64,7 @@ export default function PostCard({
 
 
     return (
-        <Box
+        <LinkBox
             as="article"
             shadow="2xl"
             borderColor="formBorder"
@@ -77,7 +78,8 @@ export default function PostCard({
                     transform: "translateX(2px)" 
                 },
             }}  
-            data-cy="post-card"  
+            data-cy="post-card"
+            onClick={() => (user && user?.id === author.id) ? navigate(`/my-posts/${slug}`) : navigate(`/posts/${slug}`)}
         >
             <Flex
                 gap={5}
@@ -93,7 +95,6 @@ export default function PostCard({
                     width="100%"
                     borderRadius="sm"
                     aspectRatio="auto"
-                    onClick={() => navigate(`/posts/${slug}`)}
                 >
                     {!cover_image ? (
                         <Skeleton height={252} width="100%" />) :
@@ -126,7 +127,7 @@ export default function PostCard({
                                 letterSpacing="-.01em"
                                 width="100%"
                             >
-                                {author?.name || "Unknown Author"}
+                                {author_name || "Unknown Author"}
                                 <Text 
                                     as="span" 
                                     display="inline-block" 
@@ -136,7 +137,7 @@ export default function PostCard({
                                 </Text>
                                 {new Date(created_at).toLocaleDateString()}
                             </Text>
-                            <LinkBox onClick={() => navigate(`/posts/${id}`)}>
+                            <LinkBox>
                                 <Icon
                                     as={HiArrowRight}
                                     className="hover-icon"
@@ -168,7 +169,7 @@ export default function PostCard({
                     </Flex>
                 </Flex>
             </Flex>
-        </Box>
+        </LinkBox>
     )
 }
 

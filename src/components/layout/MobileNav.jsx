@@ -7,6 +7,7 @@ import Loader from "../shared/Loader";
 import { useAuth } from "@/providers/AuthProvider";
 import { toaster } from "../ui/toaster";
 import { parseLogoutError } from "@/lib/helper";
+import NavButton from "../shared/NavButton";
 
 export default function MobileNav() {
     const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function MobileNav() {
     const { colorMode } = useColorMode();
 
 
-    const isActive = (path) => location.pathname === path;
+    const isActive = (path) => location.pathname.startsWith(path);
 
     if (loading) return <Loader />
 
@@ -40,6 +41,7 @@ export default function MobileNav() {
             display={{
                 lg: "none"
             }}
+            transition="all 0.3s ease-in-out"
         >
             <Flex
                 alignItems="center"
@@ -52,62 +54,14 @@ export default function MobileNav() {
                 marginX="auto"
             >
                 <ToggleThemeButton />
-                <Button
-                    variant="link"
-                    padding={".75rem 1rem"}
-                    color={isActive('/') ? "buttonActiveText" : "buttonText"}
-                    borderRadius=".5rem"
-                    onClick={() => navigate('/')}
-                    backgroundColor={isActive('/') ? "buttonBg" : "transparent"}
-                    _hover={{ 
-                        color: "buttonActiveText",
-                        backgroundColor: "buttonBg", 
-                    }}
-                    _active={{
-                        color: "buttonActiveText",
-                        backgroundColor: "buttonBg", 
-                    }}
-                    >
-                        Home
-                    </Button>
-                    {user ?
-                        <Button
-                            variant="link"
-                            padding={".75rem 1rem"}
-                            color={isActive('/my-posts') ? "buttonActiveText" : "buttonText"}
-                            borderRadius=".5rem"
-                            onClick={() => navigate('/my-posts')}
-                            backgroundColor={isActive('/my-posts') ? "buttonBg" : "transparent"}
-                            _hover={{ 
-                                color: "buttonActiveText",
-                                backgroundColor: "buttonBg", 
-                            }}
-                            _active={{
-                                color: "buttonActiveText",
-                                backgroundColor: "buttonBg", 
-                            }}
-                        >
-                        Your Posts
-                        </Button> : ''
-                    }
-                    <Button
-                        variant="link"
-                        padding={".75rem 1rem"}
-                        color={isActive('/post/create') ? "buttonActiveText" : "buttonText"}
-                        borderRadius=".5rem"
-                        onClick={() => navigate('/post/create')}
-                        backgroundColor={isActive('/post/create') ? "buttonBg" : "transparent"}
-                        _hover={{ 
-                            color: "buttonActiveText",
-                            backgroundColor: "buttonBg", 
-                        }}
-                        _active={{
-                            color: "buttonActiveText",
-                            backgroundColor: "buttonBg", 
-                        }}
-                    >
-                        Create
-                    </Button>
+                <NavButton to="/" label="Home" />
+                {user ? (
+                    <NavButton to="/my-posts" label="Your Posts" />
+                ) : (
+                    <NavButton to="/" label="Posts" condition={isActive('/posts')} />
+                )}
+
+                    <NavButton to="/post/create" label="Create" />
 
                     {user ?
                         <Button
