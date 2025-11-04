@@ -62,7 +62,7 @@ const Navbar = () => {
           ) : (
             <NavButton to="/" label="Posts" condition={isActive('/posts')} />
           )}
-           <NavButton to="/post/create" label="Start Writing" />
+           <NavButton data-cy="create-post-nav-desktop" to="/post/create" label="Start Writing" />
           {user ? 
             <Button
                 variant="link"

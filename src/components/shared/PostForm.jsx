@@ -25,6 +25,7 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "@supabase/auth-helpers-react";
 import { FormLabel } from "@chakra-ui/form-control";
 import { mixed, object, string } from "yup";
+import { parseError } from "@/lib/helper";
 
 /**
  * Validation schema for the post creation/edit form.
@@ -186,13 +187,13 @@ export default function PostForm({ post }) {
       actions.setSubmitting(false);
       values.id ? navigate(`/posts/${values.id}`) : navigate("/my-posts");
     } catch (error) {
-      console.error("Error saving post:", error.message);
       actions.setSubmitting(false);
+      const { title, description } = parseError(error)
       toaster.create({
-        title: "Error",
-        description: error.message,
-        type: "error",
-      });
+        title,
+        description,
+        type: "error"
+      })
     }
     setLoading(false);
   };
@@ -293,6 +294,7 @@ export default function PostForm({ post }) {
                       justifyContent="space-between"
                       shadow="2xl"
                       minH="400px"
+                      data-cy="editor"
                     >
                       <BlockNoteView 
                         editor={editor} 
@@ -468,6 +470,7 @@ export default function PostForm({ post }) {
               display="flex"
               gap={2}
               alignItems={"center"}
+              data-cy="create-post-button"
             >
               {loading && <Spinner size={"sm"} mr={2} />}
               {isEdit ? "Update" : "Create"}

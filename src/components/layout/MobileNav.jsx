@@ -61,7 +61,7 @@ export default function MobileNav() {
                     <NavButton to="/" label="Posts" condition={isActive('/posts')} />
                 )}
 
-                    <NavButton to="/post/create" label="Create" />
+                    <NavButton data-cy="create-post-nav-mobile" to="/post/create" label="Create" />
 
                     {user ?
                         <Button
