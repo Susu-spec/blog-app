@@ -41,3 +41,15 @@ Cypress.Commands.add("fillSignUpForm", (user) => {
     cy.get("button[type=submit]").click();
 
 })
+
+
+Cypress.Commands.add("fillPostForm", (post) => {
+    cy.get('[data-cy="create-post-nav-mobile"]').click();
+    cy.url().should('eq', Cypress.config().baseUrl + "/post/create");
+    cy.contains(/create a new post/i).should('exist');
+    
+    cy.get('textarea[name="title"]').type(post.title);
+    cy.get('textarea[name="description"]').type(post.description);
+    cy.get('input[name="cover_image"]').selectFile(post.cover_image, { force: true });
+    cy.get('[data-cy="editor"]').find('[contenteditable="true"]').click().type(post.content);;
+})
