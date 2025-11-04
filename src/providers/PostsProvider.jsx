@@ -46,6 +46,20 @@ export function PostsProvider({ children }) {
   const [loading, setLoading] = useState(false);
 
 
+  const parseFetchPostsError = (error) => {
+    const message = error?.message
+    if (/failed to fetch|network error/i.test(message)) {
+      return {
+        title: "Network error",
+        description: "We couldn't connect. Please check your internet connection and try again.",
+      }
+    }
+
+    return {
+      title: "An error occured.",
+      description: "Please reload the page.",
+    }
+  }
   /**
    * Fetch all posts from Supabase with author info.
    * Caches results to avoid redundant network calls.
@@ -71,20 +85,6 @@ export function PostsProvider({ children }) {
 
     const elapsed = Date.now() - start;
     const delay = Math.max(0, 800 - elapsed);
-    const parseFetchPostsError = (error) => {
-      const message = error?.message
-      if (/failed to fetch|network error/i.test(message)) {
-        return {
-          title: "Network error",
-          description: "We couldn't connect. Please check your internet connection and try again.",
-        }
-      }
-
-      return {
-        title: "An error occured.",
-        description: "Please reload the page.",
-      }
-    }
 
     if (error) {
       const { title, description } = parseFetchPostsError(error);
@@ -136,8 +136,15 @@ export function PostsProvider({ children }) {
     const elapsed = Date.now() - start;
     const delay = Math.max(0, 800 - elapsed);
 
-    if (error) {
-        console.error(error);
+     if (error) {
+      const { title, description } = parseFetchPostsError(error);
+      toaster.create({
+        title,
+        description,
+        type: "error",
+        duration: 4000,
+        isClosable: true,
+      })
     } else {
         setMyPosts(data || []);
     }
@@ -181,9 +188,16 @@ export function PostsProvider({ children }) {
       const delay = Math.max(0, 800 - elapsed);
 
       if (error) {
-          console.error(error);
+        const { title, description } = parseFetchPostsError(error);
+        toaster.create({
+          title,
+          description,
+          type: "error",
+          duration: 4000,
+          isClosable: true,
+        })
       } else {
-          setPostDetails(prev => ({ ...prev, [postSlug]: data }));
+        setPostDetails(prev => ({ ...prev, [postSlug]: data }));
       }
 
       setTimeout(() => {
