@@ -6,6 +6,8 @@ import { toaster } from "../ui/toaster";
 import { HiTrash } from "react-icons/hi2";
 import { useAuth } from "@/providers/AuthProvider";
 import { usePosts } from "@/providers/PostsProvider";
+import { useUser } from "@supabase/auth-helpers-react";
+import { useNavigate } from "react-router";
 
 /**
  * DeletePost component — handles post deletion with confirmation dialog.
@@ -27,8 +29,9 @@ import { usePosts } from "@/providers/PostsProvider";
 export default function DeletePost({ postId }) {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
-    const { user } = useAuth();
-    const { fetchAllPosts, fetchMyPosts } = usePosts();
+    const { user } = useUser();
+    const { refetchPosts } = usePosts();
+    const navigate = useNavigate();
 
     /**
      * Deletes the post by ID and refreshes post lists.
@@ -63,9 +66,9 @@ export default function DeletePost({ postId }) {
                 description: "Post deleted...",
                 type: "info"
             })
-            await fetchAllPosts();
-            await fetchMyPosts(user?.id);
+            await refetchPosts(user?.id)
             setOpen(false)
+            navigate("/my-posts")
         }
 
         setTimeout(() => {
@@ -76,12 +79,12 @@ export default function DeletePost({ postId }) {
 
     return (
         <Dialog.Root placement="center" open={open} onOpenChange={setOpen}>
-            <Dialog.Trigger asChild>
-                <HiTrash size={12} color="inherit"/>
+            <Dialog.Trigger asChild onClick={(e) => e.stopPropagation()}>
+                <HiTrash size={16} color="inherit" fontVariant="Linear"/>
             </Dialog.Trigger>
             <Portal>
                 <Dialog.Backdrop />
-                <Dialog.Positioner>
+                <Dialog.Positioner onClick={(e) => e.stopPropagation()}>
                     <Dialog.Content>
                         <Dialog.Body minW={600} padding={0}>
                             <motion.div
@@ -113,7 +116,10 @@ export default function DeletePost({ postId }) {
                                             display="flex"
                                             gap={2}
                                             alignItems="center"
-                                            onClick={() => handleDelete(postId)}
+                                            onClick={(e) => {
+                                                handleDelete(postId);
+                                                e.stopPropagation();
+                                            }}
                                             >
                                                 {loading && <Spinner size="sm" />}
                                                 Delete
@@ -123,7 +129,10 @@ export default function DeletePost({ postId }) {
                                             p={4}
                                             bg="buttonBg"
                                             color="buttonActiveText"
-                                            onClick={() => setOpen(false)}
+                                            onClick={(e) => {
+                                                setOpen(false)
+                                                e.stopPropagation();
+                                            }}
                                             >
                                                 Cancel
                                         </Button>

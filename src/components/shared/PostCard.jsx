@@ -3,6 +3,7 @@ import { HiArrowRight } from "react-icons/hi2";
 import { useNavigate } from "react-router";
 import DeletePost from "./DeletePostModal";
 import { useAuth } from "@/providers/AuthProvider";
+import { useUser } from "@supabase/auth-helpers-react";
 
 /**
  * PostCard component — displays a summary of a blog post with title, cover image,
@@ -163,9 +164,9 @@ export default function PostCard({
                         >
                             {description}
                         </Text>
-                        {user?.id === author?.id && 
+                        {user?.id === author_id && 
                             <DeletePost postId={id} />
-                        }
+                        } 
                     </Flex>
                 </Flex>
             </Flex>
