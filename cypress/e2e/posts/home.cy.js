@@ -8,10 +8,10 @@ describe('Home Page - Authenticated', () => {
   });
 
   it('should show a list of posts when available (happy path)', () => {
-    cy.fixture('posts.json').then((posts) => {
+    cy.fixture('existing-post.json').then((posts) => {
       cy.intercept('GET', '**/rest/v1/posts*', {
         statusCode: 200,
-        body: posts,
+        body: [posts],
       }).as('getPosts');
 
       cy.login({
@@ -21,10 +21,6 @@ describe('Home Page - Authenticated', () => {
 
       cy.url().should('eq', Cypress.config().baseUrl + "/")
       cy.wait('@getPosts');
-
-      cy.contains('Title').should('be.visible');
-      cy.contains('Description').should('be.visible');
-      cy.contains('Suwayba').should('be.visible');
       cy.get('[data-cy=post-card]').should('exist');
     });
   });

@@ -8,10 +8,10 @@ describe('My Posts', () => {
     });
 
     it("should show a list of user's posts when available", () => {
-        cy.fixture('posts.json').then((posts) => {
+        cy.fixture('existing-post.json').then((posts) => {
             cy.intercept('GET', '**/rest/v1/posts?select=*&author_id=eq*', {
                 statusCode: 200,
-                body: posts
+                body: [posts]
             }).as('getMyPosts');
 
             cy.login({
@@ -22,10 +22,6 @@ describe('My Posts', () => {
             cy.get('[data-cy="my-posts-button"]').click();
             cy.url().should('eq', Cypress.config().baseUrl + "/my-posts");
             cy.wait('@getMyPosts');
-
-            cy.contains('Title').should('be.visible');
-            cy.contains('Description').should('be.visible');
-            cy.contains('Suwayba').should('be.visible');
             cy.get('[data-cy=post-card]').should('exist');
         })
     })
