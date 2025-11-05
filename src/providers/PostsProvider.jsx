@@ -217,6 +217,33 @@ export function PostsProvider({ children }) {
       setPostDetails({});
   }, []);
 
+  /**
+   * Refetch post data after CRUD actions.
+   *
+   * @param {Object} options
+   * @param {string} [options.userId] - Current user ID, required for my posts.
+   * @param {string} [options.slug] - Slug of a specific post to refetch.
+   * @param {boolean} [options.invalidate=true] - Whether to clear caches before refetching.
+   */
+  const refetchPosts = async ({ userId, slug, invalidate = true } = {}) => {
+    if (invalidate) invalidateCache();
+
+    const promises = [];
+
+    if (userId) {
+      promises.push(fetchMyPosts(userId));
+    }
+    
+    promises.push(fetchAllPosts());
+
+    if (slug) {
+      promises.push(fetchPost(slug, true));
+    }
+
+    await Promise.all(promises);
+  };
+
+
   return (
     <PostsContext.Provider value={{
       allPosts,
@@ -227,6 +254,7 @@ export function PostsProvider({ children }) {
       fetchMyPosts,
       fetchPost,
       invalidateCache,
+      refetchPosts
     }}>
       {children}
     </PostsContext.Provider>
