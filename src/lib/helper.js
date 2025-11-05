@@ -1,3 +1,5 @@
+import { supabase } from "./supabase";
+
 /**
  * Maps numeric heading levels to their corresponding HTML heading tags.
  *
@@ -284,4 +286,62 @@ export function parseError(error) {
   }
 
   return { title, description };
+}
+
+
+export function slugify(text) {
+  return text
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]+/g, '')
+    .replace(/--+/g, '-')
+}
+
+export async function uploadCoverImage(file, userId) {
+  const fileExt = file.name.split(".").pop();
+  const filePath = `${userId}/${Date.now()}.${fileExt}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("post-covers")
+    .upload(filePath, file, { upsert: true });
+
+  if (uploadError) throw uploadError;
+
+  const { data } = supabase.storage
+    .from("post-covers")
+    .getPublicUrl(filePath);
+
+  return data.publicUrl;
+}
+
+
+export async function savePost(values, user, coverUrl) {
+  const payload = {
+    title: values.title,
+    description: values.description,
+    slug: slugify(values.title),
+    cover_image: coverUrl,
+    content: values.content,
+  };
+
+  if (values.id) {
+    return await supabase
+      .from("posts")
+      .update({ ...payload, updated_at: new Date().toISOString() })
+      .eq("id", values.id)
+      .select();
+  }
+
+  return await supabase
+    .from("posts")
+    .insert([{
+      ...payload,
+      author_id: user.id,
+      created_at: new Date().toISOString(),
+    }])
+    .select();
 }

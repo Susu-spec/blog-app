@@ -25,7 +25,8 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "@supabase/auth-helpers-react";
 import { FormLabel } from "@chakra-ui/form-control";
 import { mixed, object, string } from "yup";
-import { parseError } from "@/lib/helper";
+import { parseError, savePost, slugify, uploadCoverImage } from "@/lib/helper";
+import { usePosts } from "@/providers/PostsProvider";
 
 /**
  * Validation schema for the post creation/edit form.
@@ -90,6 +91,8 @@ export default function PostForm({ post }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [fileUploading, setFileUploading] = useState(false);
+  const { refetchPosts } = usePosts();
+  const { user } = useUser();
 
   /** @type {{ id: string, title: string, description: string, cover_image: string | File, content: string }} */
   const initialValues = {
@@ -114,69 +117,28 @@ export default function PostForm({ post }) {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.getUser();
-      if (error) throw error;
-
-      const user = data?.user;
-
-      if (!user) {
-        console.error("User not signed in");
-        throw new Error("Not authenticated");
-      }
+      const { data: authData, error: authError } = await supabase.auth.getUser();
+      if (authError || !authData?.user) throw new Error("Not authenticated");
+      const user = authData.user;
 
       let coverUrl = post?.cover_image || null;
+      if (post?.cover_image && !values.cover_image?.name) {
+        const oldPath = post.cover_image.split("/post-covers/")[1];
+        await supabase.storage.from("post-covers").remove([oldPath]);
+      }
 
-      // Upload cover image if it's a file
       if (values.cover_image instanceof File) {
-        const file = values.cover_image;
-        const fileExt = file.name.split(".").pop();
-        const filePath = `${user.id}/${Date.now()}.${fileExt}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from("post-covers")
-          .upload(filePath, file, { upsert: true });
-
-        if (uploadError) throw uploadError;
-
-        const { data } = supabase.storage
-          .from("post-covers")
-          .getPublicUrl(filePath);
-
-        coverUrl = data.publicUrl;
+        coverUrl = await uploadCoverImage(values.cover_image, user.id);
       }
 
-      let response;
-      if (values.id) {
-        // update
-        response = await supabase
-          .from("posts")
-          .update({
-            title: values.title,
-            description: values.description,
-            cover_image: coverUrl,
-            content: values.content,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", values.id)
-          .select();
-      } else {
-        // insert
-        response = await supabase
-          .from("posts")
-          .insert([
-            {
-              title: values.title,
-              description: values.description,
-              cover_image: coverUrl,
-              content: values.content,
-              author_id: user.id,
-              created_at: new Date().toISOString(),
-            },
-          ])
-          .select();
-      }
-
+      const response = await savePost(values, user, coverUrl);
       if (response.error) throw response.error;
+
+      if (values.id) {
+        await refetchPosts(user.id, slugify(values.title));
+      } else {
+        await refetchPosts(user.id);
+      }
 
       toaster.create({
         title: values.id ? "Post updated" : "Post created",
@@ -185,17 +147,14 @@ export default function PostForm({ post }) {
       });
 
       actions.setSubmitting(false);
-      values.id ? navigate(`/posts/${values.id}`) : navigate("/my-posts");
+      navigate(values.id ? `/posts/${slugify(values.title)}` : "/my-posts");
     } catch (error) {
       actions.setSubmitting(false);
-      const { title, description } = parseError(error)
-      toaster.create({
-        title,
-        description,
-        type: "error"
-      })
+      const { title, description } = parseError(error);
+      toaster.create({ title, description, type: "error" });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -228,7 +187,6 @@ export default function PostForm({ post }) {
         isValid,
         dirty
       }) => {
-
         return (
           <Form>
             <Box
@@ -300,7 +258,11 @@ export default function PostForm({ post }) {
                         editor={editor} 
                         onChange={() => {
                           const json = editor.topLevelBlocks;
-                          setFieldValue("content", JSON.stringify(json));
+                          const hasContent = json.some(block => {
+                            return block.content?.some?.(item => item.text?.trim()?.length > 10);
+                          });
+
+                          setFieldValue("content", hasContent ? JSON.stringify(json) : "");
                       }}/>
                     </Box>
                     {errors.content && <p className="text-red-500 text-xs">{errors.content}</p>}
@@ -335,7 +297,7 @@ export default function PostForm({ post }) {
                       onBlur={handleBlur}
                       value={values.title}
                     />
-                    {errors.title && touched.title && <p className="text-red-500 text-xs">{errors.title}</p>}
+                    {errors.title && <p className="text-red-500 text-xs">{errors.title}</p>}
                   </Flex>
 
 
