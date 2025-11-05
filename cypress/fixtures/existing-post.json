@@ -25,6 +25,6 @@
     "description": "Original Description",
     "slug": "original-post",
     "author": {
-    "name": "Suwayba"
+        "name": "Suwayba"
     }
 }

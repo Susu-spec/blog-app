@@ -54,7 +54,7 @@ export default function MobileNav() {
                 marginX="auto"
             >
                 <ToggleThemeButton />
-                <NavButton to="/" label="Home" />
+                <NavButton data-cy="home-button" to="/" label="Home" />
                 {user ? (
                     <NavButton data-cy="my-posts-button" to="/my-posts" label="Your Posts" />
                 ) : (
