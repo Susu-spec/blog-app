@@ -147,6 +147,7 @@ export default function PostDetail() {
                                         <button 
                                             onClick={() => navigate(`/my-posts/${post?.slug}/edit`)} 
                                             className="cursor-pointer flex gap-1.5 items-center"
+                                            data-cy="edit-post-button"
                                         >
                                             <span className="hidden md:block">Edit Post</span>
                                             <LuPencil size={12} color="inherit" />
