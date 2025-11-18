@@ -54,7 +54,7 @@ export default function PostDetail() {
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(
-                `https://www.susu-blog.vercel.app/posts/${slug}`
+                `https://susu-blog.vercel.app/posts/${slug}`
             )
             toaster.create({
                 description: "Share link copied to your clipboard",
