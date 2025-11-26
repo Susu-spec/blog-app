@@ -81,7 +81,7 @@ export default function DeletePost({ postId }) {
         <Dialog.Root placement="center" open={open} onOpenChange={setOpen}>
             <Dialog.Trigger 
                 onClick={(e) => e.stopPropagation()} 
-                data-cy="delete-post-button"
+                data-cy="delete-post-trigger"
                 asChild
             >
                 <HiTrash size={16} color="inherit" fontVariant="Linear"/>
@@ -124,6 +124,7 @@ export default function DeletePost({ postId }) {
                                                 handleDelete(postId);
                                                 e.stopPropagation();
                                             }}
+                                            data-cy='delete-post-button'
                                             >
                                                 {loading && <Spinner size="sm" />}
                                                 Delete
