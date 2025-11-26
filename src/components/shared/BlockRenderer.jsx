@@ -1,4 +1,4 @@
-import { levelFontSize, levelMap } from "@/lib/helper";
+import { levelFontSize, levelMap } from "@/utils/text";
 import { Heading, Text } from "@chakra-ui/react";
 import React from "react";
 
