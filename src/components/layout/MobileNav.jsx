@@ -6,7 +6,6 @@ import { useColorMode } from "../ui/color-mode";
 import Loader from "../shared/Loader";
 import { useAuth } from "@/providers/AuthProvider";
 import { toaster } from "../ui/toaster";
-import { parseLogoutError } from "@/lib/helper";
 import NavButton from "../shared/NavButton";
 
 export default function MobileNav() {

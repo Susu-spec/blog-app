@@ -25,8 +25,11 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "@supabase/auth-helpers-react";
 import { FormLabel } from "@chakra-ui/form-control";
 import { mixed, object, string } from "yup";
-import { parseError, savePost, slugify, uploadCoverImage } from "@/lib/helper";
 import { usePosts } from "@/providers/PostsProvider";
+import { parseError } from "@/utils/errors";
+import { slugify } from "@/utils/text";
+import { savePost } from "@/utils/post";
+import { uploadCoverImage } from "@/utils/storage";
 
 /**
  * Validation schema for the post creation/edit form.

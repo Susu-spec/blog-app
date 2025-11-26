@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router";
 import { supabase } from "@/lib/supabase";
 import PasswordField from "@/components/shared/PasswordField";
 import { toaster } from "@/components/ui/toaster";
-import { parseLoginError } from "@/lib/helper";
+import { parseLoginError } from "@/utils/errors";
 
 /**
  * LoginPage — provides a form for users to sign into their account.

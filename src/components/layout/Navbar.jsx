@@ -4,7 +4,6 @@ import { Flex, Box, Heading, Button, Container, chakra } from '@chakra-ui/react'
 import Loader from '../shared/Loader';
 import { useAuth } from '@/providers/AuthProvider';
 import { toaster } from '../ui/toaster';
-import { parseLogoutError } from '@/lib/helper';
 import NavButton from '../shared/NavButton';
 
 

@@ -1,7 +1,7 @@
 import PasswordField from "@/components/shared/PasswordField";
 import { toaster } from "@/components/ui/toaster";
-import { parseSignupError } from "@/lib/helper";
 import { supabase } from "@/lib/supabase";
+import { parseSignupError } from "@/utils/errors";
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/form-control";
 import { Box, Button, Input, Spinner } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
