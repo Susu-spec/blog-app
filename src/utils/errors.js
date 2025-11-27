@@ -250,3 +250,19 @@ export function parseError(error) {
 
   return { title, description };
 }
+
+
+export const parseFetchPostsError = (error) => {
+  const message = error?.message
+  if (/failed to fetch|network error/i.test(message)) {
+    return {
+      title: "Network error",
+      description: "We couldn't connect. Please check your internet connection and try again.",
+    }
+  }
+
+  return {
+    title: "An error occured.",
+    description: "Please reload the page.",
+  }
+}
