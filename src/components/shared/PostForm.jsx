@@ -25,11 +25,11 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "@supabase/auth-helpers-react";
 import { FormLabel } from "@chakra-ui/form-control";
 import { mixed, object, string } from "yup";
-import { usePosts } from "@/providers/PostsProvider";
 import { parseError } from "@/utils/errors";
 import { slugify } from "@/utils/text";
 import { savePost } from "@/utils/post";
 import { uploadCoverImage } from "@/utils/storage";
+import { usePosts } from "@/hooks/usePosts";
 
 /**
  * Validation schema for the post creation/edit form.
@@ -93,9 +93,11 @@ export const postFormSchema = object({
 export default function PostForm({ post }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null)
   const [fileUploading, setFileUploading] = useState(false);
   const { refetchPosts } = usePosts();
   const { user } = useUser();
+
 
   /** @type {{ id: string, title: string, description: string, cover_image: string | File, content: string }} */
   const initialValues = {
@@ -124,19 +126,45 @@ export default function PostForm({ post }) {
       if (authError || !authData?.user) throw new Error("Not authenticated");
       const user = authData.user;
 
-      let coverUrl = post?.cover_image || null;
-      if (post?.cover_image && !values.cover_image?.name) {
+
+      // SAVE POST FIRST (WITHOUT TOUCHING COVER IMAGE)
+      const response = await savePost(values, user, post?.cover_image || null);
+      if (response.error) throw response.error;
+
+      const postId = response.data?.id;
+
+
+      // UPLOAD NEW COVER ONLY AFTER POST SAVE SUCCEEDS
+      let newCoverUrl = null;
+
+      if (values.cover_image instanceof File) {
+        newCoverUrl = await uploadCoverImage(values.cover_image, user.id);
+
+        // UPDATE POST WITH NEW COVER URL
+        const updateCoverRes = await savePost(
+        {
+          id: postId,
+          title: values.title,
+          description: values.description,
+          content: values.content,
+          cover_image: newCoverUrl
+        },
+        user,
+        newCoverUrl
+      );
+
+        if (updateCoverRes.error) throw updateCoverRes.error;
+      }
+
+
+      // DELETE OLD COVER ONLY AFTER EVERYTHING SUCCEEDS
+      if (post?.cover_image && values.cover_image instanceof File) {
         const oldPath = post.cover_image.split("/post-covers/")[1];
         await supabase.storage.from("post-covers").remove([oldPath]);
       }
 
-      if (values.cover_image instanceof File) {
-        coverUrl = await uploadCoverImage(values.cover_image, user.id);
-      }
 
-      const response = await savePost(values, user, coverUrl);
-      if (response.error) throw response.error;
-
+      // REFETCH & NOTIFY
       if (values.id) {
         await refetchPosts(user.id, slugify(values.title));
       } else {
@@ -151,14 +179,19 @@ export default function PostForm({ post }) {
 
       actions.setSubmitting(false);
       navigate(values.id ? `/posts/${slugify(values.title)}` : "/my-posts");
+
     } catch (error) {
+      console.error(error)
       actions.setSubmitting(false);
+
       const { title, description } = parseError(error);
       toaster.create({ title, description, type: "error" });
+
     } finally {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     if (post?.content) {
@@ -190,6 +223,21 @@ export default function PostForm({ post }) {
         isValid,
         dirty
       }) => {
+        useEffect(() => {
+          if (!values.cover_image) return;
+
+          if (values.cover_image instanceof File) {
+            const url = URL.createObjectURL(values.cover_image);
+            setPreviewUrl(url);
+
+            return () => URL.revokeObjectURL(url);
+          }
+
+          if (typeof values.cover_image === "string") {
+            setPreviewUrl(values.cover_image);
+          }
+
+        }, [values.cover_image]);
         return (
           <Form>
             <Box
@@ -393,7 +441,7 @@ export default function PostForm({ post }) {
                                 </Progress.Root>
                               </Box> :
                               <Image
-                                src={isEdit ? values.cover_image : URL.createObjectURL(values.cover_image)}
+                                src={previewUrl}
                                 alt={values?.cover_image?.name}
                                 height="100%"
                                 mx="auto"
