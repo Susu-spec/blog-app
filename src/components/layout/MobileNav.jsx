@@ -4,9 +4,9 @@ import ToggleThemeButton from "../shared/ToggleThemeButton";
 import { HiLockOpen, HiPower } from "react-icons/hi2";
 import { useColorMode } from "../ui/color-mode";
 import Loader from "../shared/Loader";
-import { useAuth } from "@/providers/AuthProvider";
 import { toaster } from "../ui/toaster";
 import NavButton from "../shared/NavButton";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function MobileNav() {
     const navigate = useNavigate();

@@ -5,6 +5,9 @@
 
 import { toaster } from "@/components/ui/toaster";
 import { supabase } from "@/lib/supabase";
+import { fetchAllPostsFromApi, fetchMyPostsFromApi, fetchPostFromApi } from "@/services/postServices";
+import { parseFetchPostsError } from "@/utils/errors";
+import { shouldUseCache, shouldUseDetailsCache } from "@/utils/postCache";
 import { createContext, useCallback, useContext, useState } from "react";
 
 /**
@@ -37,7 +40,7 @@ import { createContext, useCallback, useContext, useState } from "react";
   * @type {React.Context<PostsContextType | undefined>}
 */
 
-const PostsContext = createContext();
+export const PostsContext = createContext();
 
 export function PostsProvider({ children }) {
   const [allPosts, setAllPosts] = useState([]);
@@ -45,21 +48,6 @@ export function PostsProvider({ children }) {
   const [postDetails, setPostDetails] = useState({});
   const [loading, setLoading] = useState(false);
 
-
-  const parseFetchPostsError = (error) => {
-    const message = error?.message
-    if (/failed to fetch|network error/i.test(message)) {
-      return {
-        title: "Network error",
-        description: "We couldn't connect. Please check your internet connection and try again.",
-      }
-    }
-
-    return {
-      title: "An error occured.",
-      description: "Please reload the page.",
-    }
-  }
   /**
    * Fetch all posts from Supabase with author info.
    * Caches results to avoid redundant network calls.
@@ -75,13 +63,7 @@ export function PostsProvider({ children }) {
     setLoading(true);
     const start = Date.now();
 
-    const { data, error } = await supabase
-      .from('posts')
-      .select(`
-        *,
-        author:author_id(name)
-      `)
-      .order('created_at', { ascending: false });
+    const { data, error } = await fetchAllPostsFromApi();
 
     const elapsed = Date.now() - start;
     const delay = Math.max(0, 800 - elapsed);
@@ -117,21 +99,12 @@ export function PostsProvider({ children }) {
   const fetchMyPosts = useCallback(async (userId) => {
     if (!userId) return;
 
-    if (myPosts.length > 0) {
-      return myPosts;
-    }
+    if (shouldUseCache(myPosts)) return myPosts;
 
     setLoading(true);
     const start = Date.now();
 
-    const { data, error } = await supabase
-      .from('posts')
-      .select(`
-        *,
-        author:author_id(name)
-      `)
-      .eq('author_id', userId)
-      .order('created_at', { ascending: false });
+    const { data, error } = await fetchMyPostsFromApi(userId);
 
     const elapsed = Date.now() - start;
     const delay = Math.max(0, 800 - elapsed);
@@ -168,21 +141,14 @@ export function PostsProvider({ children }) {
   const fetchPost = useCallback(async (postSlug) => {
       if (!postSlug) return;
 
-      if (postDetails[postSlug]) {
+      if (shouldUseDetailsCache(postDetails, postSlug)) {
         return postDetails[postSlug];
       }
 
       setLoading(true);
       const start = Date.now();
 
-      const { data, error } = await supabase
-        .from('posts')
-        .select(`
-            *,
-            author:author_id(name)
-        `)
-        .eq('slug', postSlug)
-        .single();
+      const { data, error } = await fetchPostFromApi(postSlug);
 
       const elapsed = Date.now() - start;
       const delay = Math.max(0, 800 - elapsed);
@@ -259,20 +225,4 @@ export function PostsProvider({ children }) {
       {children}
     </PostsContext.Provider>
   );
-}
-
-
-/**
- * Custom React hook to access blog post data.
- * Must be used within a `<PostsProvider>`.
- *
- * @throws {Error} If called outside of a PostsProvider.
- * @returns {PostsContextType} The posts context object.
- */
-export function usePosts() {
-    const context = useContext(PostsContext);
-    if (!context) {
-        throw new Error('usePosts must be used within PostsProvider');
-    }
-    return context;
 }

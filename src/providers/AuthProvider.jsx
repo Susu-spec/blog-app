@@ -4,8 +4,8 @@
  */
 
 import { toaster } from "@/components/ui/toaster";
-import { parseLogoutError } from "@/lib/helper";
 import { supabase } from "@/lib/supabase";
+import { parseLogoutError } from "@/utils/errors";
 import { createContext, useContext, useEffect, useState } from "react";
 
 /**
@@ -27,7 +27,7 @@ import { createContext, useContext, useEffect, useState } from "react";
  * React Context that stores authentication state and methods.
  * @type {React.Context<AuthContextType | undefined>}
  */
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 
 /**
@@ -107,21 +107,4 @@ export function AuthProvider({ children }) {
             {children}
         </AuthContext.Provider>
     );
-}
-
-
-/**
- * Custom React hook to access authentication state and actions.
- * Must be used within an `<AuthProvider>`.
- *
- * @throws {Error} If called outside of an AuthProvider.
- * @returns {AuthContextType} The authentication context object.
- */
-
-export function useAuth() {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error('useAuth must be used within AuthProvider');
-    }
-    return context;
 }

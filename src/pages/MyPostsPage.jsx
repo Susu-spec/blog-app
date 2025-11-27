@@ -2,8 +2,8 @@ import PageWrapper from "@/components/layout/PageWrapper";
 import Loader from "@/components/shared/Loader";
 import PostList from "@/components/shared/PostList";
 import SearchModal from "@/components/shared/SearchModal";
-import { useAuth } from "@/providers/AuthProvider";
-import { usePosts } from "@/providers/PostsProvider";
+import { useAuth } from "@/hooks/useAuth";
+import { usePosts } from "@/hooks/usePosts";
 import { Box, Flex, Heading } from "@chakra-ui/react";
 import { useEffect } from "react";
 

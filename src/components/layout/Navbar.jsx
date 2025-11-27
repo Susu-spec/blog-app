@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { Flex, Box, Heading, Button, Container, chakra } from '@chakra-ui/react';
 import Loader from '../shared/Loader';
-import { useAuth } from '@/providers/AuthProvider';
+import { useAuth } from '@/hooks/useAuth';
 import { toaster } from '../ui/toaster';
 import NavButton from '../shared/NavButton';
 

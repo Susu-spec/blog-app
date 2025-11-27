@@ -4,10 +4,9 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { toaster } from "../ui/toaster";
 import { HiTrash } from "react-icons/hi2";
-import { useAuth } from "@/providers/AuthProvider";
-import { usePosts } from "@/providers/PostsProvider";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useNavigate } from "react-router";
+import { usePosts } from "@/hooks/usePosts";
 
 /**
  * DeletePost component — handles post deletion with confirmation dialog.
