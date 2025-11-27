@@ -2,8 +2,7 @@ import { Box, Flex, Heading, Icon, Image, LinkBox, Skeleton, Text } from "@chakr
 import { HiArrowRight } from "react-icons/hi2";
 import { useNavigate } from "react-router";
 import DeletePost from "./DeletePostModal";
-import { useAuth } from "@/providers/AuthProvider";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useAuth } from "@/hooks/useAuth";
 
 /**
  * PostCard component — displays a summary of a blog post with title, cover image,
@@ -62,7 +61,6 @@ export default function PostCard({
     const navigate = useNavigate();
     const { blocks } = content;
     const { user } = useAuth();
-
 
     return (
         <LinkBox
