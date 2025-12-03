@@ -1,21 +1,8 @@
-import { supabase } from "@/lib/supabase";
 import { describe, expect, it, vi } from "vitest";
 import { savePost } from "./post";
 
 vi.mock("./supabase", () => ({
-  supabase: {
-    storage: {
-      from: vi.fn(() => ({
-        upload: vi.fn(),
-        getPublicUrl: vi.fn(() => ({ data: { publicUrl: "https://example.com/file.jpg" } }))
-      }))
-    },
-    from: vi.fn(() => ({
-      update: vi.fn(() => ({ select: vi.fn() })),
-      insert: vi.fn(() => ({ select: vi.fn() })),
-      eq: vi.fn()
-    }))
-  }
+  supabase: supabaseMock,
 }));
 
 
@@ -38,7 +25,7 @@ describe("savePost", () => {
 
     await savePost(values, user, coverUrl);
 
-    expect(supabase.from).toHaveBeenCalledWith("posts");
+    expect(supabaseMock.from).toHaveBeenCalledWith("posts");
   });
 
   it("updates an existing post", async () => {
@@ -54,7 +41,7 @@ describe("savePost", () => {
 
     await savePost(values, user, coverUrl);
 
-    expect(supabase.from().update).toHaveBeenCalled();
-    expect(supabase.from().update().eq).toHaveBeenCalledWith("id", "abc123");
+    expect(supabaseMock.from().update).toHaveBeenCalled();
+    expect(supabaseMock.from().update().eq).toHaveBeenCalledWith("id", "abc123");
   });
 });

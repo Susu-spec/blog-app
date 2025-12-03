@@ -1,21 +1,9 @@
-import { supabase } from "@/lib/supabase";
 import { describe, expect, it, vi } from "vitest";
 import { uploadCoverImage } from "./storage";
+import supabaseMock from "@/tests/__mocks__/supabaseMock"
 
 vi.mock("./supabase", () => ({
-  supabase: {
-    storage: {
-      from: vi.fn(() => ({
-        upload: vi.fn(),
-        getPublicUrl: vi.fn(() => ({ data: { publicUrl: "https://example.com/file.jpg" } }))
-      }))
-    },
-    from: vi.fn(() => ({
-      update: vi.fn(() => ({ select: vi.fn() })),
-      insert: vi.fn(() => ({ select: vi.fn() })),
-      eq: vi.fn()
-    }))
-  }
+  supabase: supabaseMock,
 }));
 
 
@@ -27,17 +15,17 @@ describe("uploadCoverImage", () => {
   it("uploads a file and returns public URL", async () => {
     const file = new File(["content"], "test.png", { type: "image/png" });
 
-    supabase.storage.from().upload.mockResolvedValue({ error: null });
+    supabaseMock.storage.from().upload.mockResolvedValue({ error: null });
 
     const result = await uploadCoverImage(file, "user123");
 
     expect(result).toContain("https://example.com");
-    expect(supabase.storage.from).toHaveBeenCalledWith("post-covers");
-    expect(supabase.storage.from().upload).toHaveBeenCalled();
+    expect(supabaseMock.storage.from).toHaveBeenCalledWith("post-covers");
+    expect(supabaseMock.storage.from().upload).toHaveBeenCalled();
   });
 
   it("throws if upload fails", async () => {
-    supabase.storage.from().upload.mockResolvedValue({
+    supabaseMock.storage.from().upload.mockResolvedValue({
       error: { message: "Upload failed" }
     });
 
