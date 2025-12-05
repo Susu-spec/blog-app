@@ -2,12 +2,12 @@ import '@testing-library/jest-dom';
 import { afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 
-afterEach(() => {
-  cleanup();
-});
-
-vi.mock("@/lib/supabase", () => {
-  return import("./__mocks__/supabaseMock");
+vi.mock("react-router", async () => {
+  const actual = await vi.importActual("react-router");
+  return {
+    ...actual,
+    createBrowserRouter: vi.fn(),
+  };
 });
 
 window.matchMedia = window.matchMedia || function() {

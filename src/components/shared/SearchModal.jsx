@@ -56,7 +56,7 @@ export default function SearchModal({ posts=[], loading }) {
         setQuery("")
     }, [])
 
-    if (loading) return <Spinner size="md" color="buttonActiveText"/>
+    if (loading) return <Spinner role="loading" size="md" color="buttonActiveText"/>
     
     return (
         <Dialog.Root placement="center">

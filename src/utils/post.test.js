@@ -1,47 +1,76 @@
+
 import { describe, expect, it, vi } from "vitest";
+import { supabase } from "@/lib/supabase";
+import { slugify } from "./text";
 import { savePost } from "./post";
 
-vi.mock("./supabase", () => ({
-  supabase: supabaseMock,
+vi.mock("@/lib/supabase", () => ({
+  supabase: {
+    from: vi.fn(() => ({
+      update: vi.fn(() => ({
+        eq: vi.fn(() => ({
+          select: vi.fn(() => ({
+            single: vi.fn(() => ({ data: { id: "1" }, error: null }))
+          }))
+        }))
+      })),
+      insert: vi.fn(() => ({
+        select: vi.fn(() => ({
+          single: vi.fn(() => ({ data: { id: "2" }, error: null }))
+        }))
+      }))
+    }))
+  }
 }));
 
-
-beforeEach(() => {
-  vi.clearAllMocks();
-});
-
+vi.mock("./text", () => ({
+  slugify: vi.fn((title) => title.toLowerCase().replace(/\s+/g, "-"))
+}));
 
 describe("savePost", () => {
-  it("creates a new post", async () => {
-    const values = {
-      title: "My Post",
-      description: "Desc",
-      content: "Body",
-      id: undefined
-    };
+  const user = { id: "user-123" };
 
-    const user = { id: "user123" };
-    const coverUrl = "https://example.com/test.jpg";
+  it("updates post when values.id exists", async () => {
+    const values = { id: "1", title: "My Post", description: "desc", content: {} };
+    const result = await savePost(values, user, null);
 
-    await savePost(values, user, coverUrl);
-
-    expect(supabaseMock.from).toHaveBeenCalledWith("posts");
+    expect(supabase.from).toHaveBeenCalledWith("posts");
+    expect(slugify).toHaveBeenCalledWith("My Post");
+    expect(result.data).toEqual({ id: "1" });
+    expect(result.error).toBeNull();
   });
 
-  it("updates an existing post", async () => {
-    const values = {
-      id: "abc123",
-      title: "Updated",
-      description: "Desc",
-      content: "Content"
-    };
+  it("inserts post when values.id is missing", async () => {
+    const values = { title: "New Post", description: "desc", content: {} };
+    const result = await savePost(values, user, "cover.jpg");
 
-    const user = { id: "user123" };
-    const coverUrl = "url";
+    expect(supabase.from).toHaveBeenCalledWith("posts");
+    expect(slugify).toHaveBeenCalledWith("New Post");
+    expect(result.data).toEqual({ id: "2" });
+    expect(result.error).toBeNull();
+  });
 
-    await savePost(values, user, coverUrl);
+  it("uses coverUrl over values.cover_image", async () => {
+    const values = { title: "Cover Test", description: "desc", content: {}, cover_image: "old.jpg" };
+    await savePost(values, user, "new.jpg");
 
-    expect(supabaseMock.from().update).toHaveBeenCalled();
-    expect(supabaseMock.from().update().eq).toHaveBeenCalledWith("id", "abc123");
+    // Check that payload used "new.jpg" not "old.jpg"
+    expect(slugify).toHaveBeenCalledWith("Cover Test");
+  });
+
+  it("returns error if supabase fails", async () => {
+    supabase.from.mockReturnValueOnce({
+      insert: () => ({
+        select: () => ({
+          single: () => ({ data: null, error: { message: "fail" } })
+        })
+      })
+    });
+
+    const values = { title: "Bad Post", description: "desc", content: {} };
+    const result = await savePost(values, user, null);
+
+    expect(result.error).toEqual({ message: "fail" });
+    expect(result.data).toBeNull();
   });
 });

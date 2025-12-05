@@ -1,17 +1,14 @@
-import { Provider } from "@/components/ui/provider";
+import { Provider } from "@/components/ui/provider"; // ensure this alias is valid
 import { render } from "@testing-library/react";
-import { createBrowserRouter, createMemoryRouter, RouterProvider } from "react-router";
+import { MemoryRouter } from "react-router";
 
-export function renderWithProviders(ui, options = {}) {
-  const router = createBrowserRouter(
-    [{ path: "*", element: ui }],
-    { initialEntries: options.routes || ["/"] }
-  );
 
+export function renderWithChakra(ui) {
   return render(
     <Provider>
-      <RouterProvider router={router} />
+      <MemoryRouter>
+        {ui}
+      </MemoryRouter>
     </Provider>
   );
 }
-

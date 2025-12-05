@@ -34,15 +34,3 @@ export async function savePost(values, user, coverUrl) {
   const { data, error } = result;
   return { data, error };
 }
-
-// test: {
-//     environment: 'jsdom',
-//     globals: true,
-//     setupFiles: './src/tests/setup.js',
-//     alias: {
-//       '@': path.resolve(__dirname, './src'),
-//     },
-//     deps: {
-//       inline: [/react/, /react-dom/],
-//     },
-//   },

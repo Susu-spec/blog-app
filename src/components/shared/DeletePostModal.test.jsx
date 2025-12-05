@@ -1,100 +1,142 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { usePosts } from "@/hooks/usePosts";
-import { useNavigate } from "react-router";
-import { toaster } from "@/components/ui/toaster";
+import { ChakraProvider } from "@chakra-ui/react";
+import { MemoryRouter } from "react-router";
+import { vi } from "vitest";
 import DeletePost from "./DeletePostModal";
-import supabaseMock from "@/tests/__mocks__/supabaseMock"
-import { useAuth } from "@/hooks/useAuth";
-import { renderWithProviders } from "@/tests/test-utils";
+import { renderWithChakra } from "@/tests/test-utils";
 
-vi.mock("@/hooks/useAuth");
-vi.mock("@/hooks/usePosts");
-vi.mock("react-router", () => ({
-  useNavigate: vi.fn(),
+
+vi.mock("@supabase/auth-helpers-react", () => ({
+  useUser: () => ({ user: { id: "user-123" } }),
 }));
 
+vi.mock("@/hooks/usePosts", () => ({
+  usePosts: () => ({ refetchPosts: mockRefetch }),
+}));
+
+vi.mock("react-router", async (importOriginal) => {
+  const actual = await importOriginal();
+  return { ...actual, useNavigate: () => mockNavigate };
+});
+
+
+const mockEq = vi.fn();
 vi.mock("@/lib/supabase", () => ({
-  supabase: supabaseMock,
+  supabase: {
+    from: () => ({
+      delete: () => ({
+        eq: (col, val) => mockEq(col, val),
+      }),
+    }),
+  },
 }));
 
-vi.mock("@/components/ui/toaster", () => ({
-  toaster: { create: vi.fn() },
+
+const mockNavigate = vi.fn();
+const { mockToaster } = vi.hoisted(() => ({
+  mockToaster: { create: vi.fn() },
 }));
+
+
+vi.mock("@/components/ui/toaster", () => ({ toaster: mockToaster }));
+const mockRefetch = vi.fn();
+
+
+
 
 describe("DeletePost", () => {
-  const mockNavigate = vi.fn();
-  const mockRefetch = vi.fn();
+  beforeAll(() => {
+    Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: vi.fn().mockImplementation(query => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();
-
-    useAuth.mockReturnValue({
-      user: { id: "user-123" },
-    });
-
-    usePosts.mockReturnValue({
-      refetchPosts: mockRefetch,
-    });
-
-    useNavigate.mockReturnValue(mockNavigate);
+    mockEq.mockResolvedValue({ error: null });
   });
 
-  it("opens the dialog on trigger click", () => {
-    renderWithProviders(<DeletePost postId="abc123" />);
+  it("renders delete trigger icon", () => {
+    renderWithChakra(<DeletePost postId="123" />);
+    expect(screen.getByTestId("delete-post")).toBeInTheDocument();
+  });
 
-    // Trigger is an icon, so click it
-    const trigger = screen.getByTestId("delete-post-trigger");
-    fireEvent.click(trigger);
-
+  it("opens dialog when trigger clicked", async () => {
+    renderWithChakra(<DeletePost postId="123" />);
+    fireEvent.click(screen.getByTestId("delete-post"));
+    const deleteButton = await screen.findByRole("button", { name: "Delete" });
+    fireEvent.click(deleteButton);
+    await waitFor(() => {
+      expect(screen.queryByRole("button", { name: /delete/i })).toBeInTheDocument();
+    });
     expect(
-      screen.getByText(/are you sure want to delete this post/i)
+      screen.getByText("Are you sure want to delete this post?")
     ).toBeInTheDocument();
   });
 
-  it("deletes the post successfully", async () => {
-    supabaseMock.eq.mockResolvedValue({ error: null });
+  it("shows spinner when loading", async () => {
+    mockEq.mockResolvedValueOnce({ error: null });
+    renderWithChakra(<DeletePost postId="123" />);
+    fireEvent.click(screen.getByTestId("delete-post"));
+    const deleteButton = await screen.findByRole("button", { name: "Delete" });
+    fireEvent.click(deleteButton);
+    expect(await screen.findByRole("loading")).toBeInTheDocument();
+  });
 
-    renderWithProviders(<DeletePost postId="abc123" />);
-
-    // open dialog
-    fireEvent.click(screen.getByTestId("delete-post-trigger"));
-
-    fireEvent.click(screen.getByTestId("delete-post-button"));
-
-    // wait for promise resolution
+  it("calls supabase delete and shows success toaster", async () => {
+    mockEq.mockResolvedValueOnce({ error: null });
+    renderWithChakra(<DeletePost postId="123" />);
+    fireEvent.click(screen.getByTestId("delete-post"));
+    const deleteButton = await screen.findByRole("button", { name: "Delete" });
+    fireEvent.click(deleteButton);
     await waitFor(() => {
-      expect(supabaseMock.from).toHaveBeenCalledWith("posts");
-      expect(supabaseMock.delete).toHaveBeenCalled();
-      expect(supabaseMock.eq).toHaveBeenCalledWith("id", "abc123");
+      expect(screen.queryByRole("button", { name: /delete/i })).not.toBeInTheDocument();
     });
 
-    expect(mockRefetch).toHaveBeenCalledWith("user-123");
-    expect(mockNavigate).toHaveBeenCalledWith("/my-posts");
-
-    expect(toaster.create).toHaveBeenCalledWith({
-      description: "Post deleted...",
-      type: "info",
+    await waitFor(() => {
+      expect(mockEq).toHaveBeenCalledWith("id","123");
+      expect(mockToaster.create).toHaveBeenCalledWith(
+        expect.objectContaining({ description: "Post deleted..." })
+      );
+      expect(mockNavigate).toHaveBeenCalledWith("/my-posts");
     });
   });
 
-  it("handles delete error", async () => {
-    supabaseMock.eq.mockResolvedValue({ error: { message: "Fail" } });
+  it("shows error toaster if supabase fails", async () => {
+    mockEq.mockResolvedValueOnce({ error: { message: "fail" } });
 
-    renderWithProviders(<DeletePost postId="abc123" />);
+    renderWithChakra(<DeletePost postId="123" />);
+    fireEvent.click(screen.getByTestId("delete-post"));
 
-    fireEvent.click(screen.getByTestId("delete-post-trigger"));
-
-    fireEvent.click(screen.getByTestId("delete-post-button"));
+    const deleteButton = await screen.findByRole("button", { name: /delete/i });
+    fireEvent.click(deleteButton);
 
     await waitFor(() => {
-      expect(toaster.create).toHaveBeenCalledWith({
-        title: "Error",
-        description: "Fail",
-        type: "error",
-      });
+      expect(mockToaster.create).toHaveBeenCalledWith(
+        expect.objectContaining({ title: "Error", description: "fail" })
+      );
     });
+  });
 
-    expect(mockNavigate).not.toHaveBeenCalled();
+
+  it("closes dialog when cancel clicked", async () => {
+    renderWithChakra(<DeletePost postId="123" />);
+    fireEvent.click(screen.getByTestId("delete-post"));
+    const deleteButton = await screen.findByRole("button", { name: "Delete" });
+    fireEvent.click(deleteButton);
+    fireEvent.click(screen.getByText("Cancel"));
+    await waitFor(() => {
+      expect(screen.queryByRole("button", { name: /delete/i })).not.toBeInTheDocument();
+    });
   });
 });

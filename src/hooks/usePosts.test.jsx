@@ -1,23 +1,26 @@
 import { renderHook } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
 import { usePosts } from "./usePosts";
-import { PostsProvider } from "@/providers/PostsProvider";
+import { PostsContext } from "@/providers/PostsProvider";
+import { describe, it } from "vitest";
 
 describe("usePosts", () => {
-  it("throws outside provider", () => {
-    expect(() => renderHook(() => usePosts()))
-      .toThrow("usePosts must be used within PostsProvider");
+  it("throws error when used outside PostsProvider", () => {
+    expect(() => renderHook(() => usePosts())).toThrow(
+      "usePosts must be used within PostsProvider"
+    );
   });
 
-  it("returns context inside provider", () => {
+
+  it("returns context when used inside PostsProvider", () => {
+    const mockContext = { posts: [{ id: "1", title: "Test Post" }], refetchPosts: vi.fn() };
     const wrapper = ({ children }) => (
-      <PostsProvider>{children}</PostsProvider>
+      <PostsContext.Provider value={mockContext}>
+        {children}
+      </PostsContext.Provider>
     );
 
     const { result } = renderHook(() => usePosts(), { wrapper });
-
-    expect(result.current).toHaveProperty("fetchAllPosts");
-    expect(result.current).toHaveProperty("fetchMyPosts");
-    expect(result.current).toHaveProperty("allPosts");
+    expect(result.current).toBe(mockContext);
+    expect(result.current.posts[0].title).toBe("Test Post");
   });
 });

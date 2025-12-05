@@ -64,6 +64,7 @@ export default function PostCard({
 
     return (
         <LinkBox
+            data-testid="post-card"
             as="article"
             shadow="2xl"
             borderColor="formBorder"
@@ -96,7 +97,7 @@ export default function PostCard({
                     aspectRatio="auto"
                 >
                     {!cover_image ? (
-                        <Skeleton height={252} width="100%" />) :
+                        <Skeleton height={252} width="100%" role="progressbar" />) :
                         <Image
                             borderRadius="sm"
                             src={cover_image}

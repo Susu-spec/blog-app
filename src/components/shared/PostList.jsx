@@ -33,7 +33,7 @@ import { supabase } from "@/lib/supabase";
 
 export default function PostList({ posts }) {
     if (posts?.length === 0) {
-        return <p className="italic">No posts available.</p>
+        return <p className="italic" data-testid="empty-state">No posts available.</p>
     }
 
     return (
@@ -63,6 +63,7 @@ export default function PostList({ posts }) {
                         <GridItem>
                             <PostCard
                                 post={post}
+                                data-testid="post-card"
                             />
                         </GridItem>
 
@@ -81,6 +82,7 @@ export default function PostList({ posts }) {
                                     h="100%"
                                     backgroundColor="#18191a"
                                     borderRadius="full"
+                                    role="separator"
                                 />
                             </GridItem>
                         )}
@@ -90,10 +92,12 @@ export default function PostList({ posts }) {
                             {nextPost ? (
                                 <PostCard
                                     post={nextPost}
+                                    data-testid="post-card"
                                 />
                             ) : (
                                 // Empty space for odd number of posts
                                 <Box 
+                                    data-testid="empty-box"
                                     display={{
                                         base: "hidden",
                                         lg: "block"

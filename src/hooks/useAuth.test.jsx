@@ -1,21 +1,26 @@
-import { AuthProvider } from "@/providers/AuthProvider";
 import { renderHook } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
 import { useAuth } from "./useAuth";
+import { AuthContext } from "@/providers/AuthProvider";
+import { describe, expect, it } from "vitest";
+
 
 describe("useAuth", () => {
-  it("throws if used outside provider", () => {
-    expect(() => renderHook(() => useAuth()))
-      .toThrow("useAuth must be used within AuthProvider");
+  it("throws error when used outside AuthProvider", () => {
+    expect(() => renderHook(() => useAuth())).toThrow(
+      "useAuth must be used within AuthProvider"
+    );
   });
 
-  it("returns context when used inside provider", () => {
-    const mockValue = { user: { id: "123" }, loading: false };
 
+  it("returns context when used inside AuthProvider", () => {
+    const mockContext = { user: { id: "123" }, login: vi.fn() };
     const wrapper = ({ children }) => (
-      <AuthProvider value={mockValue}>{children}</AuthProvider>
+      <AuthContext.Provider value={mockContext}>
+        {children}
+      </AuthContext.Provider>
     );
 
-    const { result } = renderHook(() => useAuth(), { wrapper })
-  })
-})
+    const { result } = renderHook(() => useAuth(), { wrapper });
+    expect(result.current).toBe(mockContext);
+  });
+});
