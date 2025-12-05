@@ -33,12 +33,12 @@ vi.mock("@/lib/supabase", () => ({
 
 
 const mockNavigate = vi.fn();
+
 const { mockToaster } = vi.hoisted(() => ({
   mockToaster: { create: vi.fn() },
 }));
-
-
 vi.mock("@/components/ui/toaster", () => ({ toaster: mockToaster }));
+
 const mockRefetch = vi.fn();
 
 
