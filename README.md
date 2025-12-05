@@ -55,17 +55,21 @@ src/
 
 ## Test Coverage
 
-This project uses Vitest for all unit tests and Cypress for all E2E tests.
-Below is the current unit test coverage for the project:
+This project uses **Vitest** for unit tests and **Cypress** for end-to-end (E2E) tests.  
+Each tool generates its own coverage report because they run in different environments and
+measure different parts of the application.
 
-![Coverage Report](./src/assets/coverage.png)
+### Unit Test Coverage (Vitest)
+Vitest measures coverage for isolated logic such as utilities, hooks, and small components.
 
-To regenerate this report locally:
+![Vitest Coverage Report](./src/assets/coverage-vitest.png)
 
-```bash
-npm run coverage
-```
-This will generate a new coverage/ folder containing the HTML report (coverage/index.html).
+### E2E Test Coverage (Cypress)
+Cypress measures coverage for full user flows executed in the browser (pages, routing, forms, etc.).
+
+![Cypress Coverage Report](./src/assets/coverage-cypress.png)
+
+---
 
 
 ##  Live Demo
