@@ -53,6 +53,20 @@ src/
  ┗ main.jsx        # Entry point
 ```
 
+## Test Coverage
+
+This project uses Vitest for all unit tests and Cypress for all E2E tests.
+Below is the current unit test coverage for the project:
+
+![Coverage Report](./src/assets/coverage.png)
+
+To regenerate this report locally:
+
+```bash
+npm run coverage
+```
+This will generate a new coverage/ folder containing the HTML report (coverage/index.html).
+
 
 ##  Live Demo
 Check out the live app here: [susu-blog.vercel.app](https://susu-blog.vercel.app/)
